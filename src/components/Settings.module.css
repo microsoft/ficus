@@ -1,0 +1,14 @@
+.vertical {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5em;
+}
+
+.vertical input,
+.vertical textarea {
+	width: 100%;
+}
+
+.bigspacer {
+	height: 5em;
+}
