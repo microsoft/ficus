@@ -26,7 +26,7 @@ export function Settings(props: SettingsProps) {
 
 	return (
 		<section>
-			<h1>Settings</h1>
+			<h1>Ficus: Login and settings</h1>
 			<p>Settings will be stored only on this device.</p>
 			<div className={styles.vertical}>
 				<p>

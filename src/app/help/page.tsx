@@ -26,15 +26,18 @@ export default function Help() {
 				the mess. I regret that you are seeing it in this state before it has a real UI and stuff.
 			</p>
 			<h2>It connects variables in Figma to tokens in GitHub</h2>
+			<p>Ficus makes it possible to edit token JSON in a centralized GitHub repo in Figma:</p>
+			<ol>
+				<li>In Figma, change a variable called "Color / Red", say, by making it darker.</li>
+				<li>Click the "Create a pull request" button in Ficus.</li>
+				<li>Ficus opens a pull request that changes <code>Color.Red</code> from <code>#ff0000</code> to <code>#990000</code>.</li>
+			</ol>
 			<p>
-				The point of this thing is to make it so that when you change your variables in Figma and then click a button in Ficus, it
-				will automatically open a pull request on GitHub for you of the corresponding changes to your token files. For example, if
-				you change the Figma variable "Color / Red" to a darker shade, Ficus will open a pull request that changes{" "}
-				<code>Color.Red</code> from <code>#ff0000</code> to <code>#990000</code>.
+				Now you can make changes that would have previously required manual handoff to an engineer, and those changes integrate with the same systems for reviews and versioning and so on that engineers are already using. That's the whole workflow!
 			</p>
 			<h2>How does it know what to change?</h2>
 			<p>
-				You configure Ficus with a file stored on GitHub that links your Figma files to your JSON files. Then, for example, it knows
+				Ficus is configured with a file stored on GitHub that links your Figma files to your JSON files. That file tells it, for example,
 				that your Figma file called "Design language" has a variable collection called "Global" that corresponds with a JSON file
 				called <code>global.json</code>. For each variable in that collection, you can either explicitly tell it the name of your
 				JSON token (<code>Color.Red</code>) in the Web Code Syntax field of the variable, or Ficus will just use the name of the
@@ -56,7 +59,7 @@ export default function Help() {
 				accident, add comments, tag people for review, and more.
 			</p>
 			<p>
-				At this time it's not possible to update an existing code review from this tool—close the first one and then make a new one.
+				At this time it's not possible to update an existing code review from this tool—close the first one on GitHub, and then make a new one with Ficus.
 			</p>
 			<h2>Who made this thing?</h2>
 			<p>Travis Spomer made it and it's © 2023 Microsoft.</p>
