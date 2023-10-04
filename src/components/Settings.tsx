@@ -79,6 +79,29 @@ export function Settings(props: SettingsProps) {
 				Access set to All Repositories (or just the ones you need), and enable repository permissions for Contents, Metadata, and
 				Pull Requests.
 			</p>
+			<h2>What does a ficus.json file look like?</h2>
+			<p>
+				You'll need a JSON file stored in GitHub in the same folder as your token files that looks like this:
+			</p>
+			<pre className={styles.tabbed}><code>
+{`{
+	"name": "My design system",
+	"figma": {
+		"files": [
+			{
+				"key": "https://www.figma.com/file/abcdefg1234567890/My-variables-file",
+				"collections": {
+					"Global tokens": {
+						"modes": {
+							"Value": [ "global.json", "global.brand.json" ]
+						}
+					}
+				}
+			}
+		]
+	}
+}`}
+			</code></pre>
 		</section>
 	)
 
