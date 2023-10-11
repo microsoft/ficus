@@ -1,0 +1,29 @@
+nav.root {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	padding: 20px 0;
+
+	background-color: rgba(255, 255, 255, 0.7);
+	backdrop-filter: blur(10px);
+}
+
+nav.root a {
+	text-decoration: none;
+}
+
+nav.root a:hover,
+nav.root a:focus-visible {
+	text-decoration: underline;
+}
+
+.logo {
+	color: var(--figma-color-text-brand, #844699);
+	font-weight: 600;
+}
+
+.under {
+	flex: none;
+	height: 60px;
+}

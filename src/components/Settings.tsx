@@ -52,7 +52,7 @@ export function Settings(props: SettingsProps) {
 				</p>
 			</div>
 			<AccentButton onClick={onDone} disabled={!isProperlyConfigured}>
-				Done
+				Save
 			</AccentButton>
 			<div className={styles.bigspacer} />
 			<h2>How do I get access tokens?</h2>

@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation"
 import styles from "./page.module.css"
 import SettingsIcon from "@/assets/settings.svg"
 import { AccentButton, OutlineButton } from "@/components/Button"
-import Settings from "@/components/Settings"
+import { Content } from "@/components/ContentStack"
+import { Settings } from "@/components/Settings"
 import { getManifestPath, isProperlyConfigured } from "@/utils/config"
 import { getFigmaFileFriendlyName, getFigmaFilePublishedVariables, getFigmaFileVariables } from "@/server/figma"
 import { GitHubUploadFile, createBranch, createPullRequest, getFileJSON, parseGitHubBlobUrl, uploadFiles } from "@/server/github"
@@ -34,7 +35,7 @@ export default function Home() {
 	}, [])
 
 	return (
-		<main className={styles.main}>
+		<Content>
 			{settingsOpen && (
 				<Settings
 					onClose={() => {
@@ -44,7 +45,11 @@ export default function Home() {
 			)}
 			{!settingsOpen && (
 				<>
-					<h1>Ficus</h1>
+					<h1>
+						You change variables
+						<br />
+						&amp; Ficus changes code.
+					</h1>
 					<div className={styles.horizontal}>
 						<AccentButton onClick={createFigmaPullRequest} disabled={isBusy}>
 							Create a PR of my changes
@@ -82,7 +87,7 @@ export default function Home() {
 					)}
 				</>
 			)}
-		</main>
+		</Content>
 	)
 
 	// TODO: Put this code somewhere reasonable as this is, well, unreasonable
