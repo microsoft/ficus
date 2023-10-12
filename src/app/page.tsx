@@ -84,7 +84,7 @@ export default function Home() {
 		</Content>
 	)
 
-	// TODO: Put this code somewhere reasonable as this is, well, unreasonable
+	// TODO: Split this code into multiple phases and get it out of the UI
 
 	async function createFigmaPullRequest() {
 		const gitHub = parseGitHubBlobUrl(getManifestPath()!)
