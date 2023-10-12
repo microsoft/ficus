@@ -1,6 +1,6 @@
 import type { RepoContentsResponse } from "@/types/github"
-import { getGitHubAccessToken } from "../utils/config"
-import { mergeRequestInit } from "./utils/fetch"
+import { getGitHubAccessToken } from "./config"
+import { mergeRequestInit } from "./fetch"
 
 export function parseGitHubBlobUrl(url: string): { repo: string; branch: string; path: string } | null {
 	try {

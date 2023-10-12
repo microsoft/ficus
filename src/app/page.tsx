@@ -7,9 +7,9 @@ import SettingsIcon from "@/assets/settings.svg"
 import { AccentButton, OutlineButton } from "@/components/Button"
 import { Content } from "@/components/ContentStack"
 import { getManifestPath, isProperlyConfigured } from "@/utils/config"
-import { getFigmaFileFriendlyName, getFigmaFilePublishedVariables, getFigmaFileVariables } from "@/server/figma"
-import { GitHubUploadFile, createBranch, createPullRequest, getFileJSON, parseGitHubBlobUrl, uploadFiles } from "@/server/github"
-import { figmaColorToTokenJsonColor } from "@/server/utils/figma"
+import { getFigmaFileFriendlyName, getFigmaFilePublishedVariables, getFigmaFileVariables } from "@/utils/figma"
+import { GitHubUploadFile, createBranch, createPullRequest, getFileJSON, parseGitHubBlobUrl, uploadFiles } from "@/utils/github"
+import { figmaColorToTokenJsonColor } from "@/utils/figma"
 import type {
 	FileVariablesLocalResponseVariableValueAlias,
 	FileVariablesLocalResponseVariable,

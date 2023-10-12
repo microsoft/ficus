@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { AccentButton } from "@/components/Button"
 import { Content } from "@/components/ContentStack"
 import Textbox from "@/components/Textbox"
-import { parseGitHubBlobUrl } from "@/server/github"
+import { parseGitHubBlobUrl } from "@/utils/github"
 import {
 	getFigmaAccessToken,
 	getGitHubAccessToken,
