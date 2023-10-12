@@ -1,25 +1,12 @@
 "use client"
 
 import React from "react"
-import { useRouter } from "next/navigation"
-import { OutlineButton } from "@/components/Button"
 import { Content } from "@/components/ContentStack"
 
 export default function Help() {
-	const router = useRouter()
-
 	return (
 		<Content>
 			<h1>What the heck is Ficus</h1>
-			<div>
-				<OutlineButton
-					onClick={() => {
-						router.push("/")
-					}}
-				>
-					Back
-				</OutlineButton>
-			</div>
 			<h2>It's a prototype</h2>
 			<p>
 				I've prioritized making sure that the actual functionality works—this obviously is not the ideal user experience. Sorry for

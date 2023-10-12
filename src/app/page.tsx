@@ -6,7 +6,6 @@ import styles from "./page.module.css"
 import SettingsIcon from "@/assets/settings.svg"
 import { AccentButton, OutlineButton } from "@/components/Button"
 import { Content } from "@/components/ContentStack"
-import { Settings } from "@/components/Settings"
 import { getManifestPath, isProperlyConfigured } from "@/utils/config"
 import { getFigmaFileFriendlyName, getFigmaFilePublishedVariables, getFigmaFileVariables } from "@/server/figma"
 import { GitHubUploadFile, createBranch, createPullRequest, getFileJSON, parseGitHubBlobUrl, uploadFiles } from "@/server/github"
@@ -24,68 +23,63 @@ import type { JsonToken, JsonTokenChildren, JsonTokenDocument, JsonTokenGroup } 
 
 export default function Home() {
 	const router = useRouter()
+	const [isReady, setIsReady] = React.useState<boolean | null>(null)
 	const [isBusy, setIsBusy] = React.useState(false)
-	const [settingsOpen, setSettingsOpen] = React.useState(false)
 	const [status, setStatus] = React.useState<string[]>([])
 	const [pullRequestUrl, setPullRequestUrl] = React.useState<string | null>(null)
 
 	React.useEffect(() => {
 		// Only access config settings from effects, since localStorage doesn't exist on the server
-		setSettingsOpen(!isProperlyConfigured())
+		setIsReady(isProperlyConfigured())
 	}, [])
 
 	return (
 		<Content>
-			{settingsOpen && (
-				<Settings
-					onClose={() => {
-						setSettingsOpen(false)
+			<h1>
+				You change variables
+				<br />
+				&amp; Ficus changes code.
+			</h1>
+			<div className={styles.horizontal}>
+				<AccentButton onClick={createFigmaPullRequest} disabled={isBusy || !isReady}>
+					Create a PR of my changes
+				</AccentButton>
+				<OutlineButton
+					onClick={() => {
+						router.push("/settings")
 					}}
-				/>
-			)}
-			{!settingsOpen && (
+					disabled={isBusy}
+				>
+					<SettingsIcon />
+					<span>Settings</span>
+				</OutlineButton>
+				<OutlineButton
+					onClick={() => {
+						router.push("/help")
+					}}
+				>
+					Help
+				</OutlineButton>
+			</div>
+			{isReady === false && (
 				<>
-					<h1>
-						You change variables
-						<br />
-						&amp; Ficus changes code.
-					</h1>
-					<div className={styles.horizontal}>
-						<AccentButton onClick={createFigmaPullRequest} disabled={isBusy}>
-							Create a PR of my changes
-						</AccentButton>
-						<OutlineButton
-							onClick={() => {
-								setSettingsOpen(true)
-							}}
-							disabled={isBusy}
-						>
-							<SettingsIcon />
-							<span>Settings</span>
-						</OutlineButton>
-						<OutlineButton
-							onClick={() => {
-								router.push("/help")
-							}}
-						>
-							Help
-						</OutlineButton>
-					</div>
-					<ul className={styles.status}>
-						{status.map((line, index) => (
-							<li key={index}>{line}</li>
-						))}
-					</ul>
-					{pullRequestUrl && (
-						<p>
-							<strong>
-								<a href={pullRequestUrl} target="_blank">
-									See the pull request on GitHub
-								</a>
-							</strong>
-						</p>
-					)}
+					<h2>It'll just take a few minutes to get ready.</h2>
+					<p>Start with that Settings button above!</p>
 				</>
+			)}
+			<ul className={styles.status}>
+				{status.map((line, index) => (
+					<li key={index}>{line}</li>
+				))}
+			</ul>
+			{pullRequestUrl && (
+				<p>
+					<strong>
+						<a href={pullRequestUrl} target="_blank">
+							See the pull request on GitHub
+						</a>
+					</strong>
+				</p>
 			)}
 		</Content>
 	)

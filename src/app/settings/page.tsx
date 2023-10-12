@@ -1,7 +1,12 @@
 "use client"
 
 import React from "react"
-import styles from "./Settings.module.css"
+import styles from "./page.module.css"
+import { useRouter } from "next/navigation"
+import { AccentButton } from "@/components/Button"
+import { Content } from "@/components/ContentStack"
+import Textbox from "@/components/Textbox"
+import { parseGitHubBlobUrl } from "@/server/github"
 import {
 	getFigmaAccessToken,
 	getGitHubAccessToken,
@@ -10,23 +15,17 @@ import {
 	setGitHubAccessToken,
 	setManifestPath,
 } from "@/utils/config"
-import AccentButton from "./Button"
-import Textbox from "./Textbox"
-import { parseGitHubBlobUrl } from "@/server/github"
 
-export interface SettingsProps {
-	onClose(): void
-}
-
-export function Settings(props: SettingsProps) {
+export default function Settings() {
+	const router = useRouter()
 	const [newFigmaAccessToken, setNewFigmaAccessToken] = React.useState(getFigmaAccessToken() || "")
 	const [newGitHubAccessToken, setNewGitHubAccessToken] = React.useState(getGitHubAccessToken() || "")
 	const [newManifestPath, setNewManifestPath] = React.useState(getManifestPath() || "")
 	const isProperlyConfigured = !!parseGitHubBlobUrl(newManifestPath) && !!newFigmaAccessToken && !!newGitHubAccessToken
 
 	return (
-		<section>
-			<h1>Ficus: Login and settings</h1>
+		<Content>
+			<h1>Login and settings</h1>
 			<p>Settings will be stored only on this device.</p>
 			<div className={styles.vertical}>
 				<p>
@@ -80,11 +79,10 @@ export function Settings(props: SettingsProps) {
 				Pull Requests.
 			</p>
 			<h2>What does a ficus.json file look like?</h2>
-			<p>
-				You'll need a JSON file stored in GitHub in the same folder as your token files that looks like this:
-			</p>
-			<pre className={styles.tabbed}><code>
-{`{
+			<p>You'll need a JSON file stored in GitHub in the same folder as your token files that looks like this:</p>
+			<pre className={styles.tabbed}>
+				<code>
+					{`{
 	"name": "My design system",
 	"figma": {
 		"files": [
@@ -101,8 +99,9 @@ export function Settings(props: SettingsProps) {
 		]
 	}
 }`}
-			</code></pre>
-		</section>
+				</code>
+			</pre>
+		</Content>
 	)
 
 	function onDone() {
@@ -112,7 +111,6 @@ export function Settings(props: SettingsProps) {
 		setFigmaAccessToken(newFigmaAccessToken)
 		setGitHubAccessToken(newGitHubAccessToken)
 
-		props.onClose()
+		router.push("/")
 	}
 }
-export default Settings
