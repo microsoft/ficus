@@ -1,10 +1,8 @@
 "use client"
 
 import React from "react"
-import { useRouter } from "next/navigation"
 import styles from "./page.module.css"
-import SettingsIcon from "@/assets/settings.svg"
-import { AccentButton, OutlineButton } from "@/components/Button"
+import { AccentButton } from "@/components/Button"
 import { Content } from "@/components/ContentStack"
 import { getManifestPath, isProperlyConfigured } from "@/utils/config"
 import { getFigmaFileFriendlyName, getFigmaFilePublishedVariables, getFigmaFileVariables } from "@/utils/figma"
@@ -22,7 +20,6 @@ import type { JsonFigmaFile, JsonManifest } from "@/types/manifest"
 import { getFriendlyTokenJSON, replaceAllTokensWithPlaceholders, type JsonToken, type JsonTokenDocument } from "@/utils/tokenjson"
 
 export default function Home() {
-	const router = useRouter()
 	const [isReady, setIsReady] = React.useState<boolean | null>(null)
 	const [isBusy, setIsBusy] = React.useState(false)
 	const [status, setStatus] = React.useState<string[]>([])
@@ -44,22 +41,6 @@ export default function Home() {
 				<AccentButton onClick={createFigmaPullRequest} disabled={isBusy || !isReady}>
 					Create a PR of my changes
 				</AccentButton>
-				<OutlineButton
-					onClick={() => {
-						router.push("/settings")
-					}}
-					disabled={isBusy}
-				>
-					<SettingsIcon />
-					<span>Settings</span>
-				</OutlineButton>
-				<OutlineButton
-					onClick={() => {
-						router.push("/help")
-					}}
-				>
-					Help
-				</OutlineButton>
 			</div>
 			{isReady === false && (
 				<>

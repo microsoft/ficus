@@ -11,9 +11,19 @@ export function Nav(_props: NavProps) {
 			<nav className={styles.root}>
 				<ContentStack>
 					<Content>
-						<Link href="/" className={styles.logo}>
-							Ficus
-						</Link>
+						<ul className={styles.horiz}>
+							<li>
+								<Link href="/" className={styles.logo}>
+									Ficus
+								</Link>
+							</li>
+							<li>
+								<Link href="/settings">Settings</Link>
+							</li>
+							<li>
+								<Link href="/help">Help</Link>
+							</li>
+						</ul>
 					</Content>
 				</ContentStack>
 			</nav>
