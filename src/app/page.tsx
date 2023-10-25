@@ -37,15 +37,17 @@ export default function Home() {
 				<br />
 				&amp; Ficus changes code.
 			</h1>
-			<div className={styles.horizontal}>
-				<AccentButton onClick={createFigmaPullRequest} disabled={isBusy || !isReady}>
-					Create a PR of my changes
-				</AccentButton>
-			</div>
+			{isReady === true && (
+				<div className={styles.horizontal}>
+					<AccentButton onClick={createFigmaPullRequest} disabled={isBusy}>
+						Create a PR of my changes
+					</AccentButton>
+				</div>
+			)}
 			{isReady === false && (
 				<>
-					<h2>It'll just take a few minutes to get ready.</h2>
-					<p>Start with that Settings button above!</p>
+					<h2>It'll just take a few minutes to get started.</h2>
+					<p>You only have to do this once. Start with that Settings link above!</p>
 				</>
 			)}
 			<ul className={styles.status}>

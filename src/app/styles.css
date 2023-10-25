@@ -38,7 +38,7 @@ body {
 	font-size: 15px;
 	line-height: 1.3333; /* (20px / 16px) */
 	background-color: var(--figma-color-bg, #ffffff);
-	background-image: linear-gradient(to bottom right, #ecf8d0, #e0ecf5);
+	background-image: linear-gradient(to bottom right, #ecf8d0, #fbfef6 40%, #fbfdfe 60%, #e0ecf5);
 	background-attachment: fixed;
 	color: var(--figma-color-text, rgba(0, 0, 0, 0.9));
 }
