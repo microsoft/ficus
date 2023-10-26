@@ -1,13 +1,6 @@
-interface CreatePullRequestOperation {
-	status: CreatePullRequestStatus
-	state: CreatePullRequestState
-}
-
-type FigmaFileData = symbol // *** JUST FOR DEVELOPING THE TYPES; MERGE WITH PAGE.TSX
-
 type OperationProgress = "none" | "busy" | "done" | "error"
 
-interface CreatePullRequestStatus {
+export interface CreatePullRequestStatus {
 	title: string
 	progress: OperationProgress
 	steps: CreatePullRequestStep[]
@@ -19,7 +12,7 @@ interface CreatePullRequestStepBase {
 	substeps: CreatePullRequestSubstep[]
 }
 
-interface CreatePullRequestGitHubStep extends CreatePullRequestStepBase {
+export interface CreatePullRequestGitHubStep extends CreatePullRequestStepBase {
 	type: "github"
 	owner: string
 	repo: string
@@ -27,24 +20,24 @@ interface CreatePullRequestGitHubStep extends CreatePullRequestStepBase {
 	filename: string
 }
 
-interface CreatePullRequestFigmaStep extends CreatePullRequestStepBase {
+export interface CreatePullRequestFigmaStep extends CreatePullRequestStepBase {
 	type: "figma"
 	title: string
 	variablesCount: number
 }
 
-interface CreatePullRequestCompletedStep extends CreatePullRequestStepBase {
+export interface CreatePullRequestCompletedStep extends CreatePullRequestStepBase {
 	type: "completed"
 	branch: string
 	number: number
 	url: string
 }
 
-interface CreatePullRequestFailedStep extends CreatePullRequestStepBase {
+export interface CreatePullRequestFailedStep extends CreatePullRequestStepBase {
 	type: "failed"
 }
 
-type CreatePullRequestStep =
+export type CreatePullRequestStep =
 	| CreatePullRequestGitHubStep
 	| CreatePullRequestFigmaStep
 	| CreatePullRequestCompletedStep
@@ -54,22 +47,18 @@ interface CreatePullRequestSubstepBase {
 	type: string
 }
 
-interface CreatePullRequestError extends CreatePullRequestSubstepBase {
+export interface CreatePullRequestError extends CreatePullRequestSubstepBase {
 	type: "error"
 	message: string
 }
 
-interface CreatePullRequestMappingSubstep extends CreatePullRequestSubstepBase {
+export interface CreatePullRequestMappingSubstep extends CreatePullRequestSubstepBase {
 	type: "file mapping"
 	figma: string
 	github: string[]
 }
 
-type CreatePullRequestSubstep = CreatePullRequestError | CreatePullRequestMappingSubstep
-
-interface CreatePullRequestState {
-	data: FigmaFileData[]
-}
+export type CreatePullRequestSubstep = CreatePullRequestError | CreatePullRequestMappingSubstep
 
 const _sampleStatus: CreatePullRequestStatus = {
 	title: "Creating pull request...",

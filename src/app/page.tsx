@@ -4,10 +4,7 @@ import React from "react"
 import styles from "./page.module.css"
 import { AccentButton } from "@/components/Button"
 import { Content } from "@/components/ContentStack"
-import { getManifestPath, isProperlyConfigured } from "@/utils/config"
-import { getFigmaFileFriendlyName, getFigmaFilePublishedVariables, getFigmaFileVariables } from "@/utils/figma"
-import { GitHubUploadFile, createBranch, createPullRequest, getFileJSON, parseGitHubBlobUrl, uploadFiles } from "@/utils/github"
-import { figmaColorToTokenJsonColor } from "@/utils/figma"
+import { useCreatePullRequest } from "@/operations/createPullRequest"
 import type {
 	FileVariablesLocalResponseVariableValueAlias,
 	FileVariablesLocalResponseVariable,
@@ -17,6 +14,10 @@ import type {
 } from "@/types/figma"
 import { ValueType } from "@/types/figma"
 import type { JsonFigmaFile, JsonManifest } from "@/types/manifest"
+import { getManifestPath, isProperlyConfigured } from "@/utils/config"
+import { getFigmaFileFriendlyName, getFigmaFilePublishedVariables, getFigmaFileVariables } from "@/utils/figma"
+import { GitHubUploadFile, createBranch, createPullRequest, getFileJSON, parseGitHubBlobUrl, uploadFiles } from "@/utils/github"
+import { figmaColorToTokenJsonColor } from "@/utils/figma"
 import { getFriendlyTokenJSON, replaceAllTokensWithPlaceholders, type JsonToken, type JsonTokenDocument } from "@/utils/tokenjson"
 
 export default function Home() {
@@ -24,6 +25,8 @@ export default function Home() {
 	const [isBusy, setIsBusy] = React.useState(false)
 	const [status, setStatus] = React.useState<string[]>([])
 	const [pullRequestUrl, setPullRequestUrl] = React.useState<string | null>(null)
+
+	const [TESTONLY_pr, TESTONLY_operations] = useCreatePullRequest()
 
 	React.useEffect(() => {
 		// Only access config settings from effects, since localStorage doesn't exist on the server
@@ -64,6 +67,10 @@ export default function Home() {
 					</strong>
 				</p>
 			)}
+			{/* <p>
+				TEST ONLY: status is {TESTONLY_pr.progress}
+				<AccentButton onClick={() => TESTONLY_operations.TESTONLY_BEGIN()}>TEST begin</AccentButton>
+			</p> */}
 		</Content>
 	)
 
