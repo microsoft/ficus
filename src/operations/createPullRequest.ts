@@ -15,11 +15,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 	#listeners: (() => void)[] = []
 
 	constructor() {
-		this.#status = {
-			title: "Default state",
-			progress: "none",
-			steps: [],
-		}
+		this.#status = initialStatus
 		this.#data = []
 
 		this.subscribe = this.subscribe.bind(this)
@@ -50,11 +46,21 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 	}
 }
 
+const initialStatus: CreatePullRequestStatus = {
+	title: "",
+	progress: "none",
+	steps: [],
+}
+
+function getServerSnapshot(): CreatePullRequestStatus {
+	return initialStatus
+}
+
 let instance: CreatePullRequestOperation | undefined
 
 export function useCreatePullRequest(): [CreatePullRequestStatus, CreatePullRequestMethods] {
 	if (!instance) {
 		instance = new CreatePullRequestOperation()
 	}
-	return [React.useSyncExternalStore(instance.subscribe, instance.getSnapshot), instance]
+	return [React.useSyncExternalStore(instance.subscribe, instance.getSnapshot, getServerSnapshot), instance]
 }
