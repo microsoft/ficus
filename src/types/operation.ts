@@ -3,6 +3,7 @@ type OperationProgress = "none" | "busy" | "done" | "error"
 export interface CreatePullRequestStatus {
 	title: string
 	progress: OperationProgress
+	legacyStatus: string[]
 	steps: CreatePullRequestStep[]
 }
 
@@ -63,6 +64,7 @@ export type CreatePullRequestSubstep = CreatePullRequestError | CreatePullReques
 const _sampleStatus: CreatePullRequestStatus = {
 	title: "Creating pull request...",
 	progress: "busy",
+	legacyStatus: [],
 	steps: [
 		{
 			type: "github",
