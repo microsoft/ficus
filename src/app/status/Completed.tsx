@@ -5,13 +5,10 @@ import Step from "./Step"
 
 export function Completed(props: CreatePullRequestCompletedStep) {
 	return (
-		<Step
-			progress={props.progress}
-			title={props.number ? `Pull request #${props.number} opened` : "Opening pull request"}
-			substeps={props.substeps}
-		>
-			{props.url && (
+		<Step progress={props.progress} substeps={props.substeps}>
+			{props.url ? (
 				<>
+					<h2>Pull request #{props.number} opened</h2>
 					<p>Ready for review!</p>
 					<p>
 						<Link href={props.url} target="_blank">
@@ -19,6 +16,8 @@ export function Completed(props: CreatePullRequestCompletedStep) {
 						</Link>
 					</p>
 				</>
+			) : (
+				<h2>Opening pull request</h2>
 			)}
 		</Step>
 	)

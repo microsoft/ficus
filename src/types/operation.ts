@@ -14,7 +14,7 @@ interface CreatePullRequestStepBase {
 
 export interface CreatePullRequestGitHubStep extends CreatePullRequestStepBase {
 	type: "github"
-	// owner: string
+	owner: string
 	repo: string
 	branch: string
 	filename: string

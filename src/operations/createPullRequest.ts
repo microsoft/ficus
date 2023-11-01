@@ -108,6 +108,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 		let manifest: JsonManifest
 		let gitHubStep: CreatePullRequestStep = {
 			type: "github",
+			owner: gitHub.owner,
 			repo: gitHub.repo,
 			branch: gitHub.branch,
 			filename: gitHub.path,
@@ -117,7 +118,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 		this.#addStep(gitHubStep)
 
 		try {
-			manifest = await getFileJSON(gitHub.repo, gitHub.branch, gitHub.path)
+			manifest = await getFileJSON(gitHub.owner, gitHub.repo, gitHub.branch, gitHub.path)
 			this.#status.title = manifest.name
 			gitHubStep = this.#updateStep(gitHubStep, { progress: "done" })
 		} catch (ex) {
@@ -189,7 +190,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 							for (const filename of figmaFile.collections[collectionName].modes[modeName]) {
 								let fileContents: JsonTokenDocument | undefined
 								try {
-									fileContents = await getFileJSON(gitHub.repo, gitHub.branch, `${gitHub.path}/${filename}`)
+									fileContents = await getFileJSON(gitHub.owner, gitHub.repo, gitHub.branch, `${gitHub.path}/${filename}`)
 								} catch (ex) {
 									// TODO: Handle this differently if the file is not found versus if there was any other error (say, JSON parsing)
 								}
@@ -298,10 +299,17 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 		const commitMessage = "Changes from Figma"
 		const prTitle = `Changes from Figma ${new Date().toDateString()}`
 		const prBody = ""
-		const createBranchSha = await createBranch(gitHub.repo, gitHub.branch, branchName)
-		await uploadFiles(gitHub.repo, branchName, filesToUpload, createBranchSha, commitMessage)
-		const [newPullRequestUrl, newPullRequestNumber] = await createPullRequest(gitHub.repo, branchName, gitHub.branch, prTitle, prBody)
-
+		const createBranchSha = await createBranch(gitHub.owner, gitHub.repo, gitHub.branch, branchName)
+		await uploadFiles(gitHub.owner, gitHub.repo, branchName, filesToUpload, createBranchSha, commitMessage)
+		const [newPullRequestUrl, newPullRequestNumber] = await createPullRequest(
+			gitHub.owner,
+			gitHub.repo,
+			branchName,
+			gitHub.branch,
+			prTitle,
+			prBody
+		)
+		33
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		pullRequestStep = this.#updateStep(pullRequestStep, {
 			progress: "done",

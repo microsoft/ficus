@@ -1,16 +1,33 @@
 .root {
 	list-style: none;
 	display: grid;
-	grid-template-columns: 60px 1fr 1fr;
+	grid-template-columns: 32px 1fr 1fr;
 	gap: 16px;
 }
 
 .progress {
 	flex: 0;
-	font-size: 48px;
+	width: 32px;
+	height: 32px;
+	margin-top: 16px;
+	font-size: 32px;
+}
+
+@keyframes rotate {
+	from {
+		rotate: 0;
+	}
+	to {
+		rotate: 360deg;
+	}
+}
+
+.spinner {
+	animation: rotate 1s infinite linear;
 }
 
 .card {
+	overflow: hidden;
 	display: flex;
 	flex-direction: column;
 	gap: 0.5em;
@@ -22,17 +39,14 @@
 	box-shadow: 0 4px 4px #00000020;
 }
 
-.card h2 {
+.card > * {
 	margin: 0;
-	text-wrap: nowrap;
+	overflow: hidden;
 	text-overflow: ellipsis;
-}
-
-.card p {
-	margin: 0;
 }
 
 .substeps {
 	margin: 1em 0;
 	padding: 0 0 0 1em;
+	list-style-type: disc;
 }
