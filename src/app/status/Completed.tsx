@@ -7,12 +7,12 @@ export function Completed(props: CreatePullRequestCompletedStep) {
 	return (
 		<Step
 			progress={props.progress}
-			title={props.number ? `Pull request #${props.number}` : "Opening pull request"}
+			title={props.number ? `Pull request #${props.number} opened` : "Opening pull request"}
 			substeps={props.substeps}
 		>
 			{props.url && (
 				<Link href={props.url} target="_blank">
-					Open pull request #{props.number}
+					Open in new tab
 				</Link>
 			)}
 		</Step>

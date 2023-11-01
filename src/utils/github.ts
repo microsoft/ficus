@@ -165,5 +165,5 @@ export async function createPullRequest(
 		}),
 	})
 
-	return pullRequest.html_url, pullRequest.number
+	return [pullRequest.html_url, pullRequest.number]
 }

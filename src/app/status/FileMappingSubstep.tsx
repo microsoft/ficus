@@ -4,7 +4,7 @@ import { CreatePullRequestMappingSubstep } from "@/types/operation"
 export function FileMapping(props: CreatePullRequestMappingSubstep) {
 	return (
 		<li>
-			{props.figma} → {props.github}
+			{props.figma} → {props.github.join(", ")}
 		</li>
 	)
 }
