@@ -274,7 +274,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 			progress: "busy",
 			substeps: [],
 		}
-		this.#addStep(gitHubStep)
+		pullRequestStep = this.#addStep(pullRequestStep)
 
 		const filesToUpload: GitHubUploadFile[] = []
 		for (const figmaFile of output) {
