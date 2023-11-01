@@ -7,7 +7,7 @@ import type {
 	FloatVariableScope,
 } from "@/types/figma"
 import { ValueType } from "@/types/figma"
-import type { CreatePullRequestStatus } from "@/types/operation"
+import type { CreatePullRequestStatus, CreatePullRequestStep, CreatePullRequestSubstep } from "@/types/operation"
 import type { JsonFigmaFile, JsonManifest } from "@/types/manifest"
 import { getManifestPath } from "@/utils/config"
 import { getFigmaFileFriendlyName, getFigmaFilePublishedVariables, getFigmaFileVariables } from "@/utils/figma"
@@ -62,37 +62,70 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 		}
 	}
 
-	async createFigmaPullRequest() {
-		this.#status = { ...this.#status, progress: "busy" }
+	#addStep<T extends CreatePullRequestStep>(step: T): T {
+		this.#status = {
+			...this.#status,
+			steps: [...this.#status.steps, step],
+		}
 		this.#onUpdate()
+		return step
+	}
 
-		// NEEDS CLEANUP!
+	#replaceStep<T extends CreatePullRequestStep>(oldStep: T, newStep: T): T {
+		const oldIndex = this.#status.steps.lastIndexOf(oldStep)
+		this.#status = {
+			...this.#status,
+			steps: oldIndex >= 0 ? this.#status.steps.with(oldIndex, newStep) : [...this.#status.steps, newStep],
+		}
+		this.#onUpdate()
+		return newStep
+	}
+
+	#updateStep<T extends CreatePullRequestStep>(step: T, updates: Partial<T>): T {
+		return this.#replaceStep(step, { ...step, ...updates })
+	}
+
+	#addSubstep<T extends CreatePullRequestStep>(step: T, substep: CreatePullRequestSubstep): T {
+		return this.#replaceStep(step, { ...step, substeps: [...step.substeps, substep] })
+	}
+
+	async createFigmaPullRequest() {
+		// TODO: Exception handling
+
+		this.#status = { ...this.#status, title: "Create pull request", progress: "busy" }
+		this.#onUpdate()
 
 		const gitHub = parseGitHubBlobUrl(getManifestPath()!)
 		if (!gitHub) return
 
 		let canContinue = true
-		let newStatus: string[] = []
-		this.#setStatus(newStatus)
 
 		// First, download the manifest file from GitHub.
 
 		let manifest: JsonManifest
+		let gitHubStep: CreatePullRequestStep = {
+			type: "github",
+			repo: gitHub.repo,
+			branch: gitHub.branch,
+			filename: gitHub.path,
+			progress: "busy",
+			substeps: [],
+		}
+		this.#addStep(gitHubStep)
+
 		try {
 			manifest = await getFileJSON(gitHub.repo, gitHub.branch, gitHub.path)
 			this.#status.title = manifest.name
-			newStatus = [...newStatus, `GitHub repo: ${gitHub.repo} (${gitHub.branch} branch), loaded ${gitHub.path}`]
-			this.#setStatus(newStatus)
+			gitHubStep = this.#updateStep(gitHubStep, { progress: "done" })
 		} catch (ex) {
-			newStatus = [...newStatus, `❌ Failed to find manifest file: ${getManifestPath()}`]
+			gitHubStep = this.#updateStep(gitHubStep, { progress: "error" })
 			canContinue = false
-			this.#setStatus(newStatus)
 			return
 		}
 
 		// Strip the path of the manifest file off: we don't need it anymore now.
 		{
-			const slashIndex = gitHub.path.indexOf("/")
+			const slashIndex = gitHub.path.lastIndexOf("/")
 			if (slashIndex >= 0) gitHub.path = gitHub.path.substring(0, slashIndex)
 			else gitHub.path = ""
 		}
@@ -104,13 +137,19 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 		for (const figmaFile of manifest.figma.files) {
 			const fileKey = figmaFile.key
 
+			let figmaStep: CreatePullRequestStep = {
+				type: "figma",
+				title: "Figma",
+				variablesCount: 0,
+				progress: "busy",
+				substeps: [],
+			}
+			figmaStep = this.#addStep(figmaStep)
 			const [friendlyName, figmaVariablesData, figmaPublishedVariablesDataById] = await Promise.all([
 				getFigmaFileFriendlyName(fileKey),
 				getFigmaFileVariables(fileKey),
 				getFigmaFilePublishedVariables(fileKey),
 			])
-			newStatus = [...newStatus, `Figma document: ${friendlyName}`]
-			this.#setStatus(newStatus)
 
 			// The published variables data is returned keyed by id, but we'll look it up by subscribed_id, so re-index it now.
 			const figmaPublishedVariablesDataBySubscribedId: FigmaFileData["remoteVariables"] = {}
@@ -129,13 +168,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 			output.push(thisOutputFile)
 
 			const localVariablesOnly = Object.values(figmaVariablesData.variables).filter(thisVariable => !thisVariable.remote)
-			newStatus = [
-				...newStatus,
-				`${localVariablesOnly.length} local variables (plus ${
-					Object.keys(figmaVariablesData.variables).length - localVariablesOnly.length
-				} imported)`,
-			]
-			this.#setStatus(newStatus)
+			figmaStep = this.#updateStep(figmaStep, { progress: "done", title: friendlyName, variablesCount: localVariablesOnly.length })
 
 			const localVariableCollectionsOnly = Object.values(figmaVariablesData.variableCollections).filter(
 				thisCollection => !thisCollection.remote
@@ -143,27 +176,19 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 			for (const collectionName in figmaFile.collections) {
 				const variableCollection = localVariableCollectionsOnly.find(thisCollection => thisCollection.name === collectionName)
 				if (variableCollection) {
-					newStatus = [...newStatus, `✔️ Variable collection: ${collectionName}`]
-					this.#setStatus(newStatus)
-
 					const thisOutputCollection: OutputTokenCollection = { modes: {} }
 					thisOutputFile.collections[variableCollection.id] = thisOutputCollection
 
 					for (const modeName in figmaFile.collections[collectionName].modes) {
 						const mode = variableCollection.modes.find(thisMode => thisMode.name === modeName)
 						if (mode) {
-							newStatus = [...newStatus, `⋮ ✔️ Mode: ${modeName} → ${figmaFile.collections[collectionName].modes[modeName]}`]
-							this.#setStatus(newStatus)
-
 							thisOutputCollection.modes[mode.modeId] = []
 							for (const filename of figmaFile.collections[collectionName].modes[modeName]) {
 								let fileContents: JsonTokenDocument | undefined
 								try {
 									fileContents = await getFileJSON(gitHub.repo, gitHub.branch, `${gitHub.path}/${filename}`)
-									newStatus = [...newStatus, `⋮ ⋮ ✔️ ${filename} found on GitHub`]
 								} catch (ex) {
 									// TODO: Handle this differently if the file is not found versus if there was any other error (say, JSON parsing)
-									newStatus = [...newStatus, `⋮ ⋮ ⚠ ${filename} will be created from scratch`]
 								}
 								thisOutputCollection.modes[mode.modeId].push({
 									filename: filename,
@@ -172,23 +197,36 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 									tokens: fileContents ? replaceAllTokensWithPlaceholders(fileContents) : {},
 								})
 							}
+							figmaStep = this.#addSubstep(figmaStep, {
+								type: "file mapping",
+								figma: `${collectionName}: ${modeName}`,
+								github: figmaFile.collections[collectionName].modes[modeName],
+							})
 						} else {
-							newStatus = [...newStatus, `⋮ ❌ Variable collection is missing mode ${modeName}!`]
-							this.#setStatus(newStatus)
+							figmaStep = this.#addSubstep(figmaStep, {
+								type: "error",
+								message: `Variable collection is missing mode ${modeName}`,
+							})
 							canContinue = false
 						}
 					}
 				} else {
-					newStatus = [...newStatus, `❌ File is missing variable collection ${collectionName}!`]
-					this.#setStatus(newStatus)
+					figmaStep = this.#updateStep(figmaStep, { progress: "error" })
+					figmaStep = this.#addSubstep(figmaStep, {
+						type: "error",
+						message: `File is missing variable collection ${collectionName}`,
+					})
 					canContinue = false
 				}
 			}
 		}
 
 		if (!canContinue) {
-			newStatus = [...newStatus, "❌ ...cannot continue because of errors."]
-			this.#setStatus(newStatus)
+			this.#addStep({
+				type: "failed",
+				progress: "error",
+				substeps: [{ type: "error", message: `Cannot continue because of errors` }],
+			})
 			return
 		}
 
@@ -200,8 +238,8 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 				if (thisVariable.remote) continue
 				const thisVariableCollection = variableCollectionsInThisFile[thisVariable.variableCollectionId]
 				if (!thisVariableCollection) {
-					newStatus = [...newStatus, `⋮ ⚠ Variable ${thisVariable.name} was from an unknown variable collection`]
-					this.#setStatus(newStatus)
+					// This variable was from an unknown variable collection, not just one not referenced in the manifest. That probably means an API error, so there's nothing we can do but skip it.
+					console.error(`Variable ${thisVariable.name} is from an unknown variable collection so it was skipped.`)
 					continue
 				}
 
@@ -209,11 +247,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 
 				const outputCollection = thisOutput.collections[thisVariableCollection.id]
 				if (!outputCollection) {
-					newStatus = [
-						...newStatus,
-						`⋮ ℹ Variable ${thisVariable.name} is from an unknown variable collection we're not including in the output`,
-					]
-					this.#setStatus(newStatus)
+					// This variable was from an unknown variable collection—that's fine; just skip variable collections not defined in the manifest.
 					continue
 				}
 
@@ -223,11 +257,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 				const valuesByMode = thisVariable.valuesByMode
 				for (const modeId in valuesByMode) {
 					const modeName = thisVariableCollectionModeIdToName[modeId]
-					if (!modeName) {
-						newStatus = [...newStatus, `⋮ ⚠ Variable ${thisVariable.name} has an extra mode defined`]
-						this.#setStatus(newStatus)
-						continue
-					}
+					if (!modeName) continue
 					const value = valuesByMode[modeId]
 					const files = outputCollection.modes[modeId]
 					if (!files) continue
@@ -236,8 +266,15 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 			}
 		}
 
-		newStatus = [...newStatus, "Now I'm ready to upload to GitHub."]
-		this.#setStatus(newStatus)
+		let pullRequestStep: CreatePullRequestStep = {
+			type: "completed",
+			branch: gitHub.branch,
+			number: null,
+			url: null,
+			progress: "busy",
+			substeps: [],
+		}
+		this.#addStep(gitHubStep)
 
 		const filesToUpload: GitHubUploadFile[] = []
 		for (const figmaFile of output) {
@@ -260,27 +297,20 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 		const prBody = ""
 		const createBranchSha = await createBranch(gitHub.repo, gitHub.branch, branchName)
 		await uploadFiles(gitHub.repo, branchName, filesToUpload, createBranchSha, commitMessage)
-		const newPullRequestUrl = await createPullRequest(gitHub.repo, branchName, gitHub.branch, prTitle, prBody)
+		const [newPullRequestUrl, newPullRequestNumber] = await createPullRequest(gitHub.repo, branchName, gitHub.branch, prTitle, prBody)
 
-		newStatus = [...newStatus, `⋮ ✔️ Pull request created`]
-		this.#setStatus(newStatus)
-
-		newStatus = [...newStatus, "✔️ ...done!"]
-		this.#setStatus(newStatus)
-	}
-
-	#setStatus(newStatus: string[]) {
-		// STUBBED OUT; DELETE THIS AND THEN FIX ERRORS ***
-		// SOME but not all calls to setStatus should append a step and then push an update
-		this.#status.legacyStatus = newStatus
-		this.#onUpdate()
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		pullRequestStep = this.#updateStep(pullRequestStep, {
+			progress: "done",
+			number: newPullRequestNumber,
+			url: newPullRequestUrl,
+		})
 	}
 }
 
 const initialStatus: CreatePullRequestStatus = {
 	title: "",
 	progress: "none",
-	legacyStatus: [],
 	steps: [],
 }
 

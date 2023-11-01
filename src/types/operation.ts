@@ -1,9 +1,8 @@
-type OperationProgress = "none" | "busy" | "done" | "error"
+export type OperationProgress = "none" | "busy" | "done" | "error"
 
 export interface CreatePullRequestStatus {
 	title: string
 	progress: OperationProgress
-	legacyStatus: string[]
 	steps: CreatePullRequestStep[]
 }
 
@@ -15,7 +14,7 @@ interface CreatePullRequestStepBase {
 
 export interface CreatePullRequestGitHubStep extends CreatePullRequestStepBase {
 	type: "github"
-	owner: string
+	// owner: string
 	repo: string
 	branch: string
 	filename: string
@@ -30,8 +29,8 @@ export interface CreatePullRequestFigmaStep extends CreatePullRequestStepBase {
 export interface CreatePullRequestCompletedStep extends CreatePullRequestStepBase {
 	type: "completed"
 	branch: string
-	number: number
-	url: string
+	number: number | null
+	url: string | null
 }
 
 export interface CreatePullRequestFailedStep extends CreatePullRequestStepBase {
@@ -60,37 +59,3 @@ export interface CreatePullRequestMappingSubstep extends CreatePullRequestSubste
 }
 
 export type CreatePullRequestSubstep = CreatePullRequestError | CreatePullRequestMappingSubstep
-
-const _sampleStatus: CreatePullRequestStatus = {
-	title: "Creating pull request...",
-	progress: "busy",
-	legacyStatus: [],
-	steps: [
-		{
-			type: "github",
-			progress: "done",
-			owner: "travisspomer",
-			repo: "TokensTestRepo",
-			branch: "main",
-			filename: "src/ficus.json",
-			substeps: [],
-		},
-		{
-			type: "figma",
-			progress: "done",
-			title: "Fluent 2 design language",
-			variablesCount: 920,
-			substeps: [{ type: "file mapping", figma: "Global tokens, Value", github: ["global.json", "global.brand.json"] }],
-		},
-		{
-			type: "figma",
-			progress: "busy",
-			title: "Fluent 2 web variables",
-			variablesCount: 263,
-			substeps: [
-				{ type: "file mapping", figma: "Web React tokens, Light", github: ["light.json"] },
-				{ type: "file mapping", figma: "Web React tokens, Dark", github: ["dark.json"] },
-			],
-		},
-	],
-}

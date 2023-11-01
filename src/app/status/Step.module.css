@@ -1,0 +1,38 @@
+.root {
+	list-style: none;
+	display: grid;
+	grid-template-columns: 60px 1fr 1fr;
+	gap: 16px;
+}
+
+.progress {
+	flex: 0;
+	font-size: 48px;
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5em;
+
+	padding: 16px;
+	background-color: white;
+	border: 1px solid #00000040;
+	border-radius: 8px;
+	box-shadow: 0 4px 4px #00000020;
+}
+
+.card h2 {
+	margin: 0;
+	text-wrap: nowrap;
+	text-overflow: ellipsis;
+}
+
+.card p {
+	margin: 0;
+}
+
+.substeps {
+	margin: 1em 0;
+	padding: 0 0 0 1em;
+}

@@ -147,19 +147,23 @@ export async function uploadFiles(
 	})
 }
 
-export async function createPullRequest(repo: string, branchFrom: string, branchTo: string, title: string, body: string): Promise<string> {
+export async function createPullRequest(
+	repo: string,
+	branchFrom: string,
+	branchTo: string,
+	title: string,
+	body: string
+): Promise<[string, number]> {
 	// https://docs.github.com/en/rest/pulls/pulls#create-a-pull-request
-	const pullRequestUrl = (
-		await call(`https://api.github.com/repos/${repo}/pulls`, {
-			method: "POST",
-			body: JSON.stringify({
-				title: title,
-				body: body,
-				head: branchFrom,
-				base: branchTo,
-			}),
-		})
-	).html_url
+	const pullRequest = await call(`https://api.github.com/repos/${repo}/pulls`, {
+		method: "POST",
+		body: JSON.stringify({
+			title: title,
+			body: body,
+			head: branchFrom,
+			base: branchTo,
+		}),
+	})
 
-	return pullRequestUrl
+	return pullRequest.html_url, pullRequest.number
 }
