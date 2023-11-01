@@ -11,9 +11,14 @@ export function Completed(props: CreatePullRequestCompletedStep) {
 			substeps={props.substeps}
 		>
 			{props.url && (
-				<Link href={props.url} target="_blank">
-					Open in new tab
-				</Link>
+				<>
+					<p>Ready for review!</p>
+					<p>
+						<Link href={props.url} target="_blank">
+							Open in new tab
+						</Link>
+					</p>
+				</>
 			)}
 		</Step>
 	)

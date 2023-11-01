@@ -73,9 +73,12 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 
 	#replaceStep<T extends CreatePullRequestStep>(oldStep: T, newStep: T): T {
 		const oldIndex = this.#status.steps.lastIndexOf(oldStep)
+		const newSteps = [...this.#status.steps]
+		if (oldIndex >= 0) newSteps[oldIndex] = newStep
+		else newSteps.push(newStep)
 		this.#status = {
 			...this.#status,
-			steps: oldIndex >= 0 ? this.#status.steps.with(oldIndex, newStep) : [...this.#status.steps, newStep],
+			steps: newSteps,
 		}
 		this.#onUpdate()
 		return newStep
