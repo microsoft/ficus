@@ -32,12 +32,10 @@ export function useCreatePullRequest(): [CreatePullRequestStatus, CreatePullRequ
 
 class CreatePullRequestOperation implements CreatePullRequestMethods {
 	#status: CreatePullRequestStatus
-	#data: CreatePullRequestState // *** maybe we only need a local variable...
 	#listeners: (() => void)[] = []
 
 	constructor() {
 		this.#status = initialStatus
-		this.#data = []
 
 		this.subscribe = this.subscribe.bind(this)
 		this.getSnapshot = this.getSnapshot.bind(this)
@@ -95,7 +93,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 	async createFigmaPullRequest() {
 		// TODO: Exception handling
 
-		this.#status = { ...this.#status, title: "Create pull request", progress: "busy" }
+		this.#status = { title: "Create pull request", progress: "busy", steps: [] }
 		this.#onUpdate()
 
 		const gitHub = parseGitHubBlobUrl(getManifestPath()!)
@@ -226,6 +224,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 		}
 
 		if (!canContinue) {
+			this.#status.progress = "error"
 			this.#addStep({
 				type: "failed",
 				progress: "error",
@@ -309,7 +308,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 			prTitle,
 			prBody
 		)
-		33
+		this.#status.progress = "done"
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		pullRequestStep = this.#updateStep(pullRequestStep, {
 			progress: "done",

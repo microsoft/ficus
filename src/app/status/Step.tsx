@@ -9,6 +9,7 @@ import ErrorSubstep from "./ErrorSubstep"
 
 export interface StepProps {
 	progress: OperationProgress
+	icon?: React.ReactNode
 	substeps: CreatePullRequestSubstep[]
 	children?: React.ReactNode | React.ReactNode[]
 }
@@ -16,7 +17,6 @@ export interface StepProps {
 export function Step(props: StepProps) {
 	return (
 		<li className={styles.root}>
-			{/* TODO: Add Figma/GitHub brand icons */}
 			<span className={styles.progress}>
 				{props.progress === "busy" ? (
 					<Spinner className={styles.spinner} />
@@ -26,7 +26,10 @@ export function Step(props: StepProps) {
 					<Checkmark />
 				) : null}
 			</span>
-			<div className={styles.card}>{props.children}</div>
+			<div className={styles.card}>
+				{props.icon && <div className={styles.icon}>{props.icon}</div>}
+				{props.children}
+			</div>
 			{props.substeps.length > 0 && (
 				<ul className={styles.substeps}>
 					{props.substeps.map((substep, index) =>
