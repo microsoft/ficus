@@ -15,7 +15,7 @@ body,
 }
 
 :root {
-	--figma-color-bg: white; /* #f3f7f2; */
+	--figma-color-bg: white;
 	--figma-color-bg-brand: #602872;
 	--figma-color-bg-disabled: #7c7c7c;
 	--figma-color-bg-onselected: #e6d4ec;

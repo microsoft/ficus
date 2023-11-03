@@ -7,10 +7,11 @@ export default function Help() {
 	return (
 		<Content>
 			<h1>What the heck is Ficus</h1>
-			<h2>It's a prototype</h2>
+			<h2>It's an internal tool</h2>
 			<p>
-				I've prioritized making sure that the actual functionality works—this obviously is not the ideal user experience. Sorry for
-				the mess. I regret that you are seeing it in this state before it has a real UI and stuff.
+				This is not a supported product and it obviously is not the ideal user experience. Sorry for the mess. I wish I could
+				"productize" it and fix it up all nice for you, but for some reason my boss doesn't see big profit growth potential coming
+				from a free token workflow script, so this is what you get.
 			</p>
 			<h2>It connects variables in Figma to tokens in GitHub</h2>
 			<p>Ficus makes it possible to edit token JSON in a centralized GitHub repo in Figma:</p>
