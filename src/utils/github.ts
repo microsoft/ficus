@@ -2,17 +2,18 @@ import type { RepoContentsResponse } from "@/types/github"
 import { getGitHubAccessToken } from "./config"
 import { mergeRequestInit } from "./fetch"
 
-export function parseGitHubBlobUrl(url: string): { repo: string; branch: string; path: string } | null {
+export function parseGitHubBlobUrl(url: string): { owner: string; repo: string; branch: string; path: string } | null {
 	try {
 		if (url.includes("..")) return null
 		const urlParts = new URL(url)
 		if (urlParts.host !== "github.com" && urlParts.host !== "www.github.com") return null
-		const results = /^\/([^/]+\/[^/]+)\/blob\/([^/]+)\/(.+)/.exec(urlParts.pathname)
+		const results = /^\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)/.exec(urlParts.pathname)
 		if (!results) return null
 		return {
-			repo: results[1],
-			branch: results[2],
-			path: results[3],
+			owner: results[1],
+			repo: results[2],
+			branch: results[3],
+			path: results[4],
 		}
 	} catch {
 		return null
@@ -49,14 +50,14 @@ function ensureSlash(path: string): string {
 	return path.startsWith("/") ? path : `/${path}`
 }
 
-export async function getRepoContents(repo: string, branch: string, path: string): Promise<RepoContentsResponse> {
-	const data = await call(`https://api.github.com/repos/${repo}/contents${ensureSlash(path)}?ref=${branch}`)
+export async function getRepoContents(owner: string, repo: string, branch: string, path: string): Promise<RepoContentsResponse> {
+	const data = await call(`https://api.github.com/repos/${owner}/${repo}/contents${ensureSlash(path)}?ref=${branch}`)
 	if (Array.isArray(data)) return data
 	throw new Error(`The path "${path}" exists but we failed to list its contents.`)
 }
 
-export async function getFileJSON(repo: string, branch: string, path: string): Promise<any> {
-	return call(`https://api.github.com/repos/${repo}/contents${ensureSlash(path)}?ref=${branch}`, {
+export async function getFileJSON(owner: string, repo: string, branch: string, path: string): Promise<any> {
+	return call(`https://api.github.com/repos/${owner}/${repo}/contents${ensureSlash(path)}?ref=${branch}`, {
 		headers: { Accept: "application/vnd.github.raw" },
 	})
 }
@@ -70,12 +71,13 @@ const enum GitBlobModes {
 	File = "100644",
 }
 
-export async function createBranch(repo: string, branchFrom: string, branchTo: string): Promise<string> {
+export async function createBranch(owner: string, repo: string, branchFrom: string, branchTo: string): Promise<string> {
 	// https://docs.github.com/en/rest/git/refs#get-a-reference
-	const branchFromLatestCommitSha: string = (await call(`https://api.github.com/repos/${repo}/git/ref/heads/${branchFrom}`)).object.sha
+	const branchFromLatestCommitSha: string = (await call(`https://api.github.com/repos/${owner}/${repo}/git/ref/heads/${branchFrom}`))
+		.object.sha
 
 	// https://docs.github.com/en/rest/git/refs#create-a-reference
-	await call(`https://api.github.com/repos/${repo}/git/refs`, {
+	await call(`https://api.github.com/repos/${owner}/${repo}/git/refs`, {
 		method: "POST",
 		body: JSON.stringify({
 			ref: `refs/heads/${branchTo}`,
@@ -87,6 +89,7 @@ export async function createBranch(repo: string, branchFrom: string, branchTo: s
 }
 
 export async function uploadFiles(
+	owner: string,
 	repo: string,
 	branch: string,
 	files: readonly GitHubUploadFile[],
@@ -96,7 +99,7 @@ export async function uploadFiles(
 	// https://docs.github.com/en/rest/git/blobs#create-a-blob
 	const blobUploadResponses = await Promise.all(
 		files.map(file =>
-			call(`https://api.github.com/repos/${repo}/git/blobs`, {
+			call(`https://api.github.com/repos/${owner}/${repo}/git/blobs`, {
 				method: "POST",
 				body: JSON.stringify({
 					encoding: "utf-8",
@@ -117,7 +120,7 @@ export async function uploadFiles(
 		}
 	}
 	const treeSha = (
-		await call(`https://api.github.com/repos/${repo}/git/trees`, {
+		await call(`https://api.github.com/repos/${owner}/${repo}/git/trees`, {
 			method: "POST",
 			body: JSON.stringify({
 				base_tree: latestCommitSha,
@@ -128,7 +131,7 @@ export async function uploadFiles(
 
 	// https://docs.github.com/en/rest/git/commits#create-a-commit
 	const newCommitSha: string = (
-		await call(`https://api.github.com/repos/${repo}/git/commits`, {
+		await call(`https://api.github.com/repos/${owner}/${repo}/git/commits`, {
 			method: "POST",
 			body: JSON.stringify({
 				message: commitMessage,
@@ -139,7 +142,7 @@ export async function uploadFiles(
 	).sha
 
 	// https://docs.github.com/en/rest/git/refs#update-a-reference
-	await call(`https://api.github.com/repos/${repo}/git/refs/heads/${branch}`, {
+	await call(`https://api.github.com/repos/${owner}/${repo}/git/refs/heads/${branch}`, {
 		method: "PATCH",
 		body: JSON.stringify({
 			sha: newCommitSha,
@@ -147,19 +150,24 @@ export async function uploadFiles(
 	})
 }
 
-export async function createPullRequest(repo: string, branchFrom: string, branchTo: string, title: string, body: string): Promise<string> {
+export async function createPullRequest(
+	owner: string,
+	repo: string,
+	branchFrom: string,
+	branchTo: string,
+	title: string,
+	body: string
+): Promise<[string, number]> {
 	// https://docs.github.com/en/rest/pulls/pulls#create-a-pull-request
-	const pullRequestUrl = (
-		await call(`https://api.github.com/repos/${repo}/pulls`, {
-			method: "POST",
-			body: JSON.stringify({
-				title: title,
-				body: body,
-				head: branchFrom,
-				base: branchTo,
-			}),
-		})
-	).html_url
+	const pullRequest = await call(`https://api.github.com/repos/${owner}/${repo}/pulls`, {
+		method: "POST",
+		body: JSON.stringify({
+			title: title,
+			body: body,
+			head: branchFrom,
+			base: branchTo,
+		}),
+	})
 
-	return pullRequestUrl
+	return [pullRequest.html_url, pullRequest.number]
 }

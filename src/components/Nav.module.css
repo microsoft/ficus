@@ -19,11 +19,23 @@ nav.root a:focus-visible {
 }
 
 .logo {
-	color: var(--figma-color-text-brand, #844699);
 	font-weight: 600;
 }
 
 .under {
 	flex: none;
 	height: 60px;
+}
+
+.horiz {
+	display: flex;
+	margin: 0;
+	padding: 0;
+	gap: 2em;
+}
+
+.horiz li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
