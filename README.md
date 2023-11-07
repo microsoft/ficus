@@ -1,6 +1,10 @@
 # Ficus
 
-This is an internal prototype and not supported in any way.
+This is an internal tool and not supported or warranted in any way. I cannot stress enough that this was just created by one dude and neither he nor anyone else is making any guarantees that this will work for you or even continue to be accessible.
+
+With that out of the way, try [Ficus](https://ficus.ms.design).
+
+---
 
 ## Contributing
 
@@ -23,3 +27,7 @@ trademarks or logos is subject to and must follow
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.
+
+---
+
+© 2023 Microsoft.

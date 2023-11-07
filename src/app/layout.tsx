@@ -1,5 +1,7 @@
 import "./styles.css"
 import { Inter } from "next/font/google"
+import Nav from "@/components/Nav"
+import { ContentStack } from "@/components/ContentStack"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -15,7 +17,12 @@ export interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
 	return (
 		<html lang="en">
-			<body className={inter.className}>{children}</body>
+			<body className={inter.className}>
+				<Nav />
+				<main>
+					<ContentStack>{children}</ContentStack>
+				</main>
+			</body>
 		</html>
 	)
 }

@@ -1,9 +1,8 @@
 button.outline,
 button.accent {
-	height: 32px;
-	line-height: 30px;
-	max-width: 200px;
-	padding: 0 11px;
+	height: 2.5em;
+	max-width: 16em;
+	padding: 0 1em;
 
 	background-color: transparent;
 	border-radius: 6px;
