@@ -15,7 +15,7 @@ body,
 }
 
 :root {
-	--figma-color-bg: white; /* #f3f7f2; */
+	--figma-color-bg: white;
 	--figma-color-bg-brand: #602872;
 	--figma-color-bg-disabled: #7c7c7c;
 	--figma-color-bg-onselected: #e6d4ec;
@@ -38,7 +38,7 @@ body {
 	font-size: 15px;
 	line-height: 1.3333; /* (20px / 16px) */
 	background-color: var(--figma-color-bg, #ffffff);
-	background-image: linear-gradient(to bottom right, #ecf8d0, #e0ecf5);
+	background-image: linear-gradient(to bottom right, #ecf8d0, #fbfef6 40%, #fbfdfe 60%, #e0ecf5);
 	background-attachment: fixed;
 	color: var(--figma-color-text, rgba(0, 0, 0, 0.9));
 }
