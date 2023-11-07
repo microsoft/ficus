@@ -15,8 +15,6 @@ import { GitHubUploadFile, createBranch, createPullRequest, getFileJSON, parseGi
 import { figmaColorToTokenJsonColor } from "@/utils/figma"
 import { getFriendlyTokenJSON, replaceAllTokensWithPlaceholders, type JsonToken, type JsonTokenDocument } from "@/utils/tokenjson"
 
-type CreatePullRequestState = FigmaFileData[]
-
 interface CreatePullRequestMethods {
 	createFigmaPullRequest(): Promise<void>
 }
