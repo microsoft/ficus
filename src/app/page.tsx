@@ -33,17 +33,22 @@ export default function Home() {
 				<>
 					<div className={styles.horizontal}>
 						<AccentButton onClick={createFigmaPullRequest} disabled={isBusy}>
-							Create a PR of my changes
+							Create a pull request
 						</AccentButton>
 					</div>
 				</>
 			) : isConfigured === false ? (
 				<>
 					<h2>It'll just take a few minutes to get started.</h2>
-					<p>
-						You only have to do this once. Start with that <strong>Settings</strong> link above!
-					</p>
-					<p>Keep in mind that this is an internal tool and not supported or warranted in any way.</p>
+					<p>You only have to do this once. Choose which page sounds more appropriate for you:</p>
+					<ul>
+						<li>
+							<a href="/help/onboarding/repo">Preparing your GitHub repo to work with Ficus</a> (mostly for engineers)
+						</li>
+						<li>
+							<a href="/help/onboarding/usage">Setting up Ficus and making your first pull request</a> (mostly for designers)
+						</li>
+					</ul>
 				</>
 			) : null}
 		</Content>

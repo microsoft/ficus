@@ -37,20 +37,33 @@ export default function Settings() {
 								GitHub link to ficus.json (e.g. https://github.com/TravisSpomer/MyTokens/blob/main/src/ficus.json)
 								<br />
 								<Textbox required value={newManifestPath} onChange={ev => setNewManifestPath(ev.target.value)} />
+								<br />
+								If you don't have one, see <a href="/help/onboarding/repo">Preparing your GitHub repo to work with Ficus</a>
+								.
 							</label>
 						</p>
 						<p>
 							<label>
 								Figma access token
 								<br />
-								<Textbox required value={newFigmaAccessToken} onChange={ev => setNewFigmaAccessToken(ev.target.value)} />
+								<Textbox
+									type="password"
+									required
+									value={newFigmaAccessToken}
+									onChange={ev => setNewFigmaAccessToken(ev.target.value)}
+								/>
 							</label>
 						</p>
 						<p>
 							<label>
 								GitHub access token
 								<br />
-								<Textbox required value={newGitHubAccessToken} onChange={ev => setNewGitHubAccessToken(ev.target.value)} />
+								<Textbox
+									type="password"
+									required
+									value={newGitHubAccessToken}
+									onChange={ev => setNewGitHubAccessToken(ev.target.value)}
+								/>
 							</label>
 						</p>
 					</div>
@@ -64,9 +77,8 @@ export default function Settings() {
 			<div className={styles.bigspacer} />
 			<h2>How do I get access tokens?</h2>
 			<p>
-				You'll need to get access tokens manually—that's just a temporary limitation for now. Each service has different ways of
-				getting one. Treat your access tokens like a password and never share them with anyone. Do not use the access tokens you
-				create for this app with anything else.
+				Treat an access token like a password and never share it with anyone. But unlike a password, once you paste your tokens
+				here, you don't need to save them anywhere else. Here's how you get them:
 			</p>
 			<h3>Figma</h3>
 			<p>
@@ -74,7 +86,7 @@ export default function Settings() {
 				<a href="https://www.figma.com/settings" target="_blank">
 					Figma settings
 				</a>
-				, scroll down to Personal access tokens and click Generate new token.
+				, scroll down to Personal access tokens and click Generate new token. Copy and paste that token into the box above.
 			</p>
 			<h3>GitHub</h3>
 			<p>
@@ -84,31 +96,8 @@ export default function Settings() {
 				</a>
 				. Create a fine-grained PAT, with Resource Owner set to the account that owns the repo containing your tokens, Repository
 				Access set to All Repositories (or just the ones you need), and enable repository permissions for Contents, Metadata, and
-				Pull Requests.
+				Pull Requests. Copy and paste that token into the box above.
 			</p>
-			<h2>What does a ficus.json file look like?</h2>
-			<p>You'll need a JSON file stored in GitHub in the same folder as your token files that looks like this:</p>
-			<pre className={styles.tabbed}>
-				<code>
-					{`{
-	"name": "My design system",
-	"figma": {
-		"files": [
-			{
-				"key": "https://www.figma.com/file/abcdefg1234567890/My-variables-file",
-				"collections": {
-					"Global tokens": {
-						"modes": {
-							"Value": [ "global.json", "global.brand.json" ]
-						}
-					}
-				}
-			}
-		]
-	}
-}`}
-				</code>
-			</pre>
 		</Content>
 	)
 

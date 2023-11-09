@@ -13,7 +13,9 @@ export default function Help() {
 				work for you or even continue to be accessible, or that it will continue to be developed.
 			</p>
 			<h2>It connects variables in Figma to tokens in GitHub</h2>
-			<p>Ficus connects your variables in Figma to token JSON in GitHub. After initial setup:</p>
+			<p>
+				Ficus connects your variables in Figma to token JSON in GitHub. After <a href="/help/onboarding/repo">initial setup</a>:
+			</p>
 			<ol>
 				<li>Make a change to one or more variables in Figma: say, making Color/Red darker</li>
 				<li>Click the "Create a pull request" button in Ficus</li>
@@ -37,33 +39,15 @@ export default function Help() {
 				. It doesn't support other token file formats, does not work with other design tools, and does not work with tokens stored
 				outside of GitHub. It does not transform token JSON into code (say, CSS variables).
 			</p>
-			<h2>How does it know what to change?</h2>
-			<p>
-				Ficus is configured with a file stored on GitHub that links your Figma files to your JSON files. That file tells it, for
-				example, that your Figma file called "Design language" has a variable collection called "Global" that corresponds with a
-				JSON file called <code>global.json</code>. For each variable in that collection, you can either explicitly tell it the name
-				of your JSON token (<code>Color.Red</code>) in the Web Code Syntax field of the variable, or Ficus will just use the name of
-				the variable if that's not set.
-			</p>
-			<h2>How do I avoid breaking it?</h2>
-			<p>Ficus is pretty flexible but it does require a few things to remain constant.</p>
+			<h2>How do I set it up?</h2>
 			<ul>
-				<li>The names of the variable collections—if these change, they need to be changed in the manifest file on GitHub too.</li>
 				<li>
-					The names and organization of the variables themselves <em>if</em> you don't explicitly set the Web Code Syntax field—if
-					the variable name/syntax changes, it will be reflected in the token files, which will probably look like one token was
-					deleted and one was added. Changing the names of tokens can break code that depends on the existing names.
+					<a href="/help/onboarding/repo">Preparing your GitHub repo to work with Ficus</a> (mostly for engineers)
+				</li>
+				<li>
+					<a href="/help/onboarding/usage">Setting up Ficus and making your first pull request</a> (mostly for designers)
 				</li>
 			</ul>
-			<h2>How do I review changes?</h2>
-			<p>
-				The actual token review will take place on GitHub. From there you can also close the pull request if you made it by
-				accident, add comments, tag people for review, and more.
-			</p>
-			<p>
-				At this time it's not possible to update an existing code review from this tool—close the first one on GitHub, and then make
-				a new one with Ficus.
-			</p>
 			<h2>Legal info</h2>
 			<p>
 				Ficus is © 2023 Microsoft and developed by Travis Spomer from{" "}
@@ -77,6 +61,10 @@ export default function Help() {
 				.{" "}
 				<a href="https://go.microsoft.com/fwlink/?LinkId=521839" target="_blank">
 					Privacy
+				</a>
+				.{" "}
+				<a href="https://github.com/microsoft/ficus" target="_blank">
+					Ficus source on GitHub
 				</a>
 				.
 			</p>

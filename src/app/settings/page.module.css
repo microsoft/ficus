@@ -12,8 +12,3 @@
 .bigspacer {
 	height: 5em;
 }
-
-pre.tabbed {
-	tab-size: 2;
-	user-select: text;
-}
