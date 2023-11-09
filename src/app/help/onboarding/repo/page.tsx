@@ -20,6 +20,7 @@ export default function OnboardingRepo() {
 					(or, Ficus can just create them from scratch)
 				</li>
 				<li>Links to the Figma files that contain the variables you want to use</li>
+				<li>A Figma enterprise plan (standard plans can't access these features)</li>
 				<li>An understanding of how your Figma variables relate to your tokens</li>
 			</ul>
 			<h2>How this will work</h2>
