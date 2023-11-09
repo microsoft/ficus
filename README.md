@@ -1,10 +1,22 @@
 # Ficus
 
-This is an internal tool and not supported or warranted in any way. I cannot stress enough that this was just created by one dude and neither he nor anyone else is making any guarantees that this will work for you or even continue to be accessible.
+**This is an internal tool and not supported or warranted in any way.** No guarantees are made that this will work for you or even continue to be accessible, or that it will continue to be developed. But you're welcome to adapt it for your own needs.
 
-With that out of the way, try [Ficus](https://ficus.ms.design).
+With that out of the way, try [Ficus](https://ficus.ms.design)!
+
+Ficus connects your variables in Figma to token JSON in GitHub. After initial setup:
+
+1. Make a change to one or more variables in Figma
+2. Click the "Create a pull request" button in Ficus
+3. Ficus opens a pull request on GitHub of the exact changes made to your variables
+
+With Ficus, designers can make changes that would have previously required manual handoff to an engineer, and those changes integrate with the same systems for reviews and versioning and so on that engineers are already using.
 
 ---
+
+## Building
+
+This is a pretty typical [Next.js](https://nextjs.org/) app. Use `npm run dev` for a dev build and `npm run build` for a production build.
 
 ## Contributing
 

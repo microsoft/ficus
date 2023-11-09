@@ -6,29 +6,36 @@ import { Content } from "@/components/ContentStack"
 export default function Help() {
 	return (
 		<Content>
-			<h1>What the heck is Ficus</h1>
+			<h1>What is Ficus?</h1>
 			<h2>It's an internal tool</h2>
 			<p>
-				This is an internal tool and not supported or warranted in any way. I cannot stress enough that this was just created by one
-				dude and neither he nor anyone else is making any guarantees that this will work for you or even continue to be accessible.
-			</p>
-			<p>
-				This obviously is not the ideal user experience. Sorry for the mess. I wish I could "productize" it and fix it up all nice
-				for you, but for some reason my boss doesn't see big profit growth potential coming from a free token workflow script, so
-				this is what you get.
+				<strong>This is an internal tool and not supported or warranted in any way.</strong> No guarantees are made that this will
+				work for you or even continue to be accessible, or that it will continue to be developed.
 			</p>
 			<h2>It connects variables in Figma to tokens in GitHub</h2>
-			<p>Ficus makes it possible to edit token JSON in a centralized GitHub repo in Figma:</p>
+			<p>Ficus connects your variables in Figma to token JSON in GitHub. After initial setup:</p>
 			<ol>
-				<li>In Figma, change a variable called "Color / Red", say, by making it darker.</li>
-				<li>Click the "Create a pull request" button in Ficus.</li>
+				<li>Make a change to one or more variables in Figma: say, making Color/Red darker</li>
+				<li>Click the "Create a pull request" button in Ficus</li>
 				<li>
-					Ficus opens a pull request that changes <code>Color.Red</code> from <code>#ff0000</code> to <code>#990000</code>.
+					Ficus opens a pull request on GitHub of the exact changes made to your variables: in this case, changing{" "}
+					<code>Color.Red</code> from <code>#ff0000</code> to <code>#990000</code>.
 				</li>
 			</ol>
 			<p>
-				Now you can make changes that would have previously required manual handoff to an engineer, and those changes integrate with
-				the same systems for reviews and versioning and so on that engineers are already using. That's the whole workflow!
+				With Ficus, designers can make changes that would have previously required manual handoff to an engineer, and those changes
+				integrate with the same systems for reviews and versioning and so on that engineers are already using.
+			</p>
+			<h2>
+				What Ficus <em>isn't</em>
+			</h2>
+			<p>
+				Ficus saves tokens in the{" "}
+				<a href="https://tr.designtokens.org/" target="_blank">
+					W3C Design Token Community Group draft format
+				</a>
+				. It doesn't support other token file formats, does not work with other design tools, and does not work with tokens stored
+				outside of GitHub. It does not transform token JSON into code (say, CSS variables).
 			</p>
 			<h2>How does it know what to change?</h2>
 			<p>
@@ -57,8 +64,22 @@ export default function Help() {
 				At this time it's not possible to update an existing code review from this tool—close the first one on GitHub, and then make
 				a new one with Ficus.
 			</p>
-			<h2>Who made this thing?</h2>
-			<p>Travis Spomer made it and it's © 2023 Microsoft.</p>
+			<h2>Legal info</h2>
+			<p>
+				Ficus is © 2023 Microsoft and developed by Travis Spomer from{" "}
+				<a href="https://microsoft.design/" target="_blank">
+					Microsoft Design
+				</a>
+				.{" "}
+				<a href="https://go.microsoft.com/fwlink/?LinkID=206977" target="_blank">
+					Terms of use
+				</a>
+				.{" "}
+				<a href="https://go.microsoft.com/fwlink/?LinkId=521839" target="_blank">
+					Privacy
+				</a>
+				.
+			</p>
 		</Content>
 	)
 }

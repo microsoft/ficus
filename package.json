@@ -2,6 +2,13 @@
 	"name": "ficus",
 	"version": "0.1.0",
 	"private": true,
+	"license": "MIT",
+	"homepage": "https://ficus.ms.design",
+	"author": "Travis Spomer <travis@microsoft.com>",
+	"repository": {
+		"type": "private",
+		"url": "https://github.com/microsoft/ficus"
+	},
 	"dependencies": {
 		"next": "^13.5.4",
 		"react": "18.2.0",

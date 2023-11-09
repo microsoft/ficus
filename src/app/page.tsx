@@ -40,7 +40,10 @@ export default function Home() {
 			) : isConfigured === false ? (
 				<>
 					<h2>It'll just take a few minutes to get started.</h2>
-					<p>You only have to do this once. Start with that Settings link above!</p>
+					<p>
+						You only have to do this once. Start with that <strong>Settings</strong> link above!
+					</p>
+					<p>Keep in mind that this is an internal tool and not supported or warranted in any way.</p>
 				</>
 			) : null}
 		</Content>
