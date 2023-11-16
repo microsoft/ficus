@@ -10,6 +10,7 @@ button.accent {
 
 	color: var(--figma-color-text, rgba(0, 0, 0, 0.9));
 	font: inherit;
+	font-weight: 600;
 	text-align: center;
 
 	cursor: default;
@@ -37,7 +38,6 @@ button.accent {
 	border-color: transparent;
 
 	color: var(--figma-color-text-onbrand, white);
-	font-weight: 500;
 }
 
 button.accent:focus-visible {

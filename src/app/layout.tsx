@@ -1,9 +1,6 @@
 import "./styles.css"
-import { Inter } from "next/font/google"
 import Nav from "@/components/Nav"
 import { ContentStack } from "@/components/ContentStack"
-
-const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
 	title: "Ficus",
@@ -17,7 +14,7 @@ export interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
 	return (
 		<html lang="en">
-			<body className={inter.className}>
+			<body>
 				<Nav />
 				<main>
 					<ContentStack>{children}</ContentStack>

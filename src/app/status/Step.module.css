@@ -39,6 +39,8 @@
 	border-radius: 8px;
 	box-shadow: 0 4px 4px #00000020;
 
+	line-height: 1;
+
 	animation: show 600ms;
 }
 

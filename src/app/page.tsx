@@ -33,11 +33,7 @@ export default function Home() {
 
 	return (
 		<Content>
-			<h1>
-				You change variables
-				<br />
-				&amp; Ficus changes code.
-			</h1>
+			<h1>You change variables &amp; Ficus changes code.</h1>
 			{createPullRequestStatus.progress === "busy" ? (
 				<Link href="/status">Working...</Link>
 			) : isConfigured === true ? (

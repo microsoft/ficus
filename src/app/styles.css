@@ -1,3 +1,47 @@
+@font-face {
+	font-family: "Cascadia Code";
+	src:
+		url("/assets/fonts/CascadiaCode.ttf") format("truetype"),
+		url("/assets/fonts/CascadiaCode-Regular.otf") format("opentype"),
+		url("/assets/fonts/CascadiaCode.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Segoe UI";
+	src:
+		local("Segoe UI"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/normal/latest.woff2) format("woff2"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/normal/latest.woff) format("woff"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/normal/latest.ttf) format("truetype");
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Segoe UI";
+	src:
+		local("Segoe UI Semibold"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.woff2) format("woff2"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.woff) format("woff"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.ttf) format("truetype");
+	font-weight: 600;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Segoe UI";
+	src:
+		local("Segoe UI Bold"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.woff2) format("woff2"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.woff) format("woff"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.ttf) format("truetype");
+	font-weight: 900;
+	font-display: swap;
+}
+
 *,
 *:before,
 *:after {
@@ -26,6 +70,7 @@ body,
 	--figma-color-icon: black;
 	--figma-color-text: black;
 	--figma-color-text-brand: #844699;
+	--figma-color-text-brand-hover: #9f65b3;
 	--figma-color-text-disabled: rgba(0, 0, 0, 0.3);
 	--figma-color-text-onbrand: white;
 	--figma-color-text-ondisabled: white;
@@ -34,13 +79,19 @@ body,
 body {
 	display: flex;
 	flex-direction: column;
-	font-family: Inter, system-ui, sans-serif;
-	font-size: 15px;
-	line-height: 1.3333; /* (20px / 16px) */
+	font-family: "Segoe UI", Inter, system-ui, sans-serif;
+	font-size: 16px;
+	line-height: 1.5; /* (24px / 16px) */
 	background-color: var(--figma-color-bg, #ffffff);
 	background-image: linear-gradient(to bottom right, #ecf8d0, #fbfef6 40%, #fbfdfe 60%, #e0ecf5);
 	background-attachment: fixed;
 	color: var(--figma-color-text, rgba(0, 0, 0, 0.9));
+}
+
+pre,
+code,
+tt {
+	font-family: "Cascadia Code", "Courier New", monospace;
 }
 
 p,
@@ -57,17 +108,21 @@ h1 {
 	font-size: 64px;
 	font-weight: 300;
 	letter-spacing: -0.04em;
+	line-height: 1.25;
+	text-wrap: balance;
 	color: var(--figma-color-text-brand, #844699);
 }
 
 h2 {
-	font-size: 24px;
+	font-size: 32px;
 	font-weight: 600;
+	line-height: 1.3333;
 }
 
 h3 {
-	font-size: 20px;
+	font-size: 24px;
 	font-weight: 600;
+	line-height: 1.3333;
 }
 
 h4,
@@ -75,17 +130,19 @@ h5,
 h6 {
 	font-size: 18px;
 	font-weight: normal;
+	line-height: 1.3333;
 }
 
 a,
 a:visited {
 	color: var(--figma-color-text-brand, #007be5);
-	text-decoration: none;
+	text-decoration-color: #84469966;
 }
 
 a:hover,
 a:focus-visible {
-	text-decoration: underline;
+	color: var(--figma-color-text-brand-hover, #9f65b3);
+	text-decoration-color: #9f65b3;
 }
 
 b,
