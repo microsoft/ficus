@@ -150,10 +150,6 @@ strong {
 	font-weight: 600;
 }
 
-*:focus {
-	outline: none;
-}
-
 img,
 svg {
 	border: none;
