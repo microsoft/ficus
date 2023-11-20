@@ -26,6 +26,12 @@
 	animation: rotate 1s infinite linear;
 }
 
+@media (prefers-reduced-motion) {
+	.spinner {
+		animation-duration: 4s;
+	}
+}
+
 .card {
 	position: relative;
 	overflow: hidden;
@@ -42,6 +48,12 @@
 	line-height: 1;
 
 	animation: show 600ms;
+}
+
+@media (prefers-reduced-motion) {
+	.card {
+		animation: none;
+	}
 }
 
 @keyframes show {
