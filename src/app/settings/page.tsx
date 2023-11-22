@@ -17,6 +17,8 @@ export default function Settings() {
 	const [newFigmaAccessToken, setNewFigmaAccessToken] = React.useState(project ? project.figma.accessToken : "")
 	const [newGitHubAccessToken, setNewGitHubAccessToken] = React.useState(project ? project.gitHub.accessToken : "")
 	const [newManifestPath, setNewManifestPath] = React.useState(project ? project.manifestUrl : "")
+	const [isBusy, setIsBusy] = React.useState(false)
+	const [errorText, setErrorText] = React.useState<string | null>(null)
 	const isProperlyConfigured = !!parseGitHubBlobUrl(newManifestPath) && !!newFigmaAccessToken && !!newGitHubAccessToken
 
 	return (
@@ -30,12 +32,18 @@ export default function Settings() {
 							<label>
 								GitHub link to ficus.json (e.g. https://github.com/TravisSpomer/MyTokens/blob/main/src/ficus.json)
 								<br />
-								<Textbox required value={newManifestPath} onChange={ev => setNewManifestPath(ev.target.value)} />
+								<Textbox
+									required
+									value={newManifestPath}
+									disabled={isBusy}
+									onChange={ev => setNewManifestPath(ev.target.value)}
+								/>
 								<br />
 								If you don't have one, see <a href="/help/onboarding/repo">Preparing your GitHub repo to work with Ficus</a>
 								.
 							</label>
 						</p>
+						{errorText && <div className={styles.error}>{errorText}</div>}
 						<p>
 							<label>
 								Figma access token
@@ -44,6 +52,7 @@ export default function Settings() {
 									type="password"
 									required
 									value={newFigmaAccessToken}
+									disabled={isBusy}
 									onChange={ev => setNewFigmaAccessToken(ev.target.value)}
 								/>
 							</label>
@@ -56,17 +65,18 @@ export default function Settings() {
 									type="password"
 									required
 									value={newGitHubAccessToken}
+									disabled={isBusy}
 									onChange={ev => setNewGitHubAccessToken(ev.target.value)}
 								/>
 							</label>
 						</p>
 					</div>
-					<AccentButton onClick={onDone} disabled={!isProperlyConfigured}>
+					<AccentButton onClick={onDone} disabled={isBusy || !isProperlyConfigured}>
 						Save
 					</AccentButton>
 				</>
 			) : (
-				<p>You can change settings once Ficus is no longer busy opening a pull request.</p>
+				<p>You can change settings after Ficus finishes opening a pull request.</p>
 			)}
 			<div className={styles.bigspacer} />
 			<h2>How do I get access tokens?</h2>
@@ -96,22 +106,34 @@ export default function Settings() {
 	)
 
 	async function onDone() {
-		if (!isProperlyConfigured) return
+		setErrorText(null)
+		if (isBusy || !isProperlyConfigured) return
 
-		const projectManager = getProjectManager()
-		const newProject = await projectManager.test({
-			manifestUrl: newManifestPath,
-			figma: {
-				accessToken: newFigmaAccessToken,
-			},
-			gitHub: {
-				accessToken: newGitHubAccessToken,
-			},
-		})
-		if (!newProject) return // TODO: Show an error when this throws
-		projectManager.clear()
-		projectManager.add(newProject)
+		try {
+			setIsBusy(true)
+			const projectManager = getProjectManager()
+			const newProject = await projectManager.test({
+				manifestUrl: newManifestPath,
+				figma: {
+					accessToken: newFigmaAccessToken,
+				},
+				gitHub: {
+					accessToken: newGitHubAccessToken,
+				},
+			})
+			if (!newProject) return
+			projectManager.clear()
+			projectManager.add(newProject)
 
-		router.push("/")
+			router.push("/")
+		} catch (ex) {
+			setErrorText(
+				`I wasn't able to connect to that ficus.json file, either because it doesn't exist at that address or the GitHub access token didn't have access to it.${
+					ex instanceof Error ? ` (${ex})` : ""
+				}`
+			)
+		} finally {
+			setIsBusy(false)
+		}
 	}
 }

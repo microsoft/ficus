@@ -12,3 +12,7 @@
 .bigspacer {
 	height: 5em;
 }
+
+.error {
+	color: red;
+}
