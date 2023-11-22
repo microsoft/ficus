@@ -7,41 +7,31 @@ import { useRouter } from "next/navigation"
 import { AccentButton } from "@/components/Button"
 import { Content } from "@/components/ContentStack"
 import { useCreatePullRequest } from "@/operations/createPullRequest"
-import { getProjectManager } from "@/projects"
+import { Project, getProjectManager } from "@/projects"
 
 export default function Home() {
 	const router = useRouter()
-	const [isConfigured, setIsConfigured] = React.useState<boolean | null>(null)
-	const [projectName, setProjectName] = React.useState<string | null>(null)
 	const [createPullRequestStatus, createPullRequestOperations] = useCreatePullRequest()
 	const isBusy = createPullRequestStatus.progress === "busy"
-
-	React.useEffect(() => {
-		// Only access config settings from effects, since localStorage doesn't exist on the server
-		const project = getProjectManager().getActive()
-		if (project) {
-			setProjectName(project.name)
-			setIsConfigured(true)
-		} else {
-			setIsConfigured(false)
-		}
-	}, [])
+	const projects = getProjectManager().getAll()
 
 	return (
 		<Content>
 			<h1>You change variables &amp; Ficus changes code.</h1>
 			{createPullRequestStatus.progress === "busy" ? (
 				<Link href="/status">Working...</Link>
-			) : isConfigured === true ? (
-				<>
-					<div className={styles.horizontal}>
-						<AccentButton onClick={createFigmaPullRequest} disabled={isBusy}>
-							Create a pull request
-						</AccentButton>
+			) : projects.length > 0 ? (
+				projects.map(project => (
+					<div key={project.manifestUrl}>
+						<h2>{project.name}</h2>
+						<div className={styles.horizontal}>
+							<AccentButton onClick={() => createFigmaPullRequest(project)} disabled={isBusy}>
+								Create a pull request
+							</AccentButton>
+						</div>
 					</div>
-					{projectName && <div className={styles.repoinfo}>{projectName}</div>}
-				</>
-			) : isConfigured === false ? (
+				))
+			) : projects.length === 0 ? (
 				<>
 					<h2>It'll just take a few minutes to get started.</h2>
 					<p>You only have to do this once. Choose which page sounds more appropriate for you:</p>
@@ -59,10 +49,8 @@ export default function Home() {
 		</Content>
 	)
 
-	async function createFigmaPullRequest() {
-		if (isBusy) return
-		const project = getProjectManager().getActive()
-		if (!project) return
+	async function createFigmaPullRequest(project: Project) {
+		if (isBusy || !project) return
 		router.push("/status")
 		createPullRequestOperations.createFigmaPullRequest(project)
 	}

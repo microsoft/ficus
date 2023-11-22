@@ -91,13 +91,17 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 	async createFigmaPullRequest(project: Project) {
 		// TODO: Exception handling
 
-		this.#status = { title: "Create pull request", progress: "busy", steps: [] }
+		this.#status = { title: project.name, progress: "busy", steps: [] }
 		this.#onUpdate()
 
 		const gitHub = parseGitHubBlobUrl(project.manifestUrl)
 		if (!gitHub) return
 
 		let canContinue = true
+
+		// Make a copy of the project data in case the original changes while we're working.
+		// (but skip this for server builds on ancient Node versions)
+		if ("structuredClone" in globalThis) project = structuredClone(project)
 
 		// First, download the manifest file from GitHub.
 
@@ -116,6 +120,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 		try {
 			manifest = await getFileJSON(project, gitHub.owner, gitHub.repo, gitHub.branch, gitHub.path)
 			this.#status.title = manifest.name
+			// TODO: If this name is different from the one we have stored, update the project.
 			gitHubStep = this.#updateStep(gitHubStep, { progress: "done" })
 		} catch (ex) {
 			gitHubStep = this.#updateStep(gitHubStep, { progress: "error" })
