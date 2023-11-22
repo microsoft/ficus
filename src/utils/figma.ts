@@ -4,7 +4,7 @@ import type {
 	FileVariablesPublishedResponse,
 	FileVariablesPublishedResponseMeta,
 } from "@/types/figma"
-import { getFigmaAccessToken } from "./config"
+import type { Project } from "@/projects"
 import { mergeRequestInit } from "./fetch"
 
 /** Given a Figma share URL, returns the file's key for passing to APIs, or null if one is not available. */
@@ -37,9 +37,7 @@ export function figmaColorToTokenJsonColor(rgba: FigmaRGBA): string {
 	return `#${toHex2(rgba.r)}${toHex2(rgba.g)}${toHex2(rgba.b)}${rgba.a !== undefined && rgba.a < 1.0 ? toHex2(rgba.a) : ""}`
 }
 
-async function call(url: string, options?: RequestInit): Promise<any> {
-	const figmaAccessToken = getFigmaAccessToken()
-	if (!figmaAccessToken) throw new Error("Can't call APIs without authentication")
+async function call(project: Project, url: string, options?: RequestInit): Promise<any> {
 	const response = await fetch(
 		url,
 		mergeRequestInit(
@@ -47,7 +45,7 @@ async function call(url: string, options?: RequestInit): Promise<any> {
 				method: "GET",
 				headers: [
 					["Accept", "application/json"],
-					["X-Figma-Token", figmaAccessToken],
+					["X-Figma-Token", project.figma.accessToken],
 				],
 				next: {
 					revalidate: 0, // disable Next.js caching
@@ -63,25 +61,25 @@ async function call(url: string, options?: RequestInit): Promise<any> {
 }
 
 /** Given a Figma key, returns the file's friendly name. */
-export async function getFigmaFileFriendlyName(fileKey: string): Promise<string> {
+export async function getFigmaFileFriendlyName(project: Project, fileKey: string): Promise<string> {
 	const key = getFileKeyFromFigmaUrl(fileKey)
 	if (!key) throw new Error(`Invalid Figma file key: ${fileKey}`)
-	const data = await call(`https://api.figma.com/v1/files/${key}?depth=1`)
+	const data = await call(project, `https://api.figma.com/v1/files/${key}?depth=1`)
 	return data.name
 }
 
 /** Given a Figma key, returns a list of all of the local and imported variable collections in the file. */
-export async function getFigmaFileVariables(fileKey: string): Promise<FileVariablesLocalResponseMeta> {
+export async function getFigmaFileVariables(project: Project, fileKey: string): Promise<FileVariablesLocalResponseMeta> {
 	const key = getFileKeyFromFigmaUrl(fileKey)
 	if (!key) throw new Error(`Invalid Figma file key: ${fileKey}`)
-	const data: FileVariablesLocalResponse = await call(`https://api.figma.com/v1/files/${key}/variables/local`)
+	const data: FileVariablesLocalResponse = await call(project, `https://api.figma.com/v1/files/${key}/variables/local`)
 	return data.meta
 }
 
 /** Given a Figma key, returns a list of all of the published variables in the file. Note that the set of information is slightly different than for the local variables query. */
-export async function getFigmaFilePublishedVariables(fileKey: string): Promise<FileVariablesPublishedResponseMeta> {
+export async function getFigmaFilePublishedVariables(project: Project, fileKey: string): Promise<FileVariablesPublishedResponseMeta> {
 	const key = getFileKeyFromFigmaUrl(fileKey)
 	if (!key) throw new Error(`Invalid Figma file key: ${fileKey}`)
-	const data: FileVariablesPublishedResponse = await call(`https://api.figma.com/v1/files/${key}/variables/published`)
+	const data: FileVariablesPublishedResponse = await call(project, `https://api.figma.com/v1/files/${key}/variables/published`)
 	return data.meta
 }

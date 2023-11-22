@@ -7,24 +7,20 @@ import { useRouter } from "next/navigation"
 import { AccentButton } from "@/components/Button"
 import { Content } from "@/components/ContentStack"
 import { useCreatePullRequest } from "@/operations/createPullRequest"
-import { isProperlyConfigured } from "@/utils/config"
-import { getManifestPath } from "@/utils/config"
-import { parseGitHubBlobUrl } from "@/utils/github"
+import { getProjectManager } from "@/projects"
 
 export default function Home() {
 	const router = useRouter()
 	const [isConfigured, setIsConfigured] = React.useState<boolean | null>(null)
-	const [repoName, setRepoName] = React.useState<string | null>(null)
+	const [projectName, setProjectName] = React.useState<string | null>(null)
 	const [createPullRequestStatus, createPullRequestOperations] = useCreatePullRequest()
 	const isBusy = createPullRequestStatus.progress === "busy"
 
 	React.useEffect(() => {
 		// Only access config settings from effects, since localStorage doesn't exist on the server
-		if (isProperlyConfigured()) {
-			const repoInfo = parseGitHubBlobUrl(getManifestPath()!)
-			if (repoInfo) {
-				setRepoName(`${repoInfo.owner}/${repoInfo.repo} (${repoInfo.branch})`)
-			}
+		const project = getProjectManager().getActive()
+		if (project) {
+			setProjectName(project.name)
 			setIsConfigured(true)
 		} else {
 			setIsConfigured(false)
@@ -43,7 +39,7 @@ export default function Home() {
 							Create a pull request
 						</AccentButton>
 					</div>
-					{repoName && <div className={styles.repoinfo}>{repoName}</div>}
+					{projectName && <div className={styles.repoinfo}>{projectName}</div>}
 				</>
 			) : isConfigured === false ? (
 				<>
@@ -65,7 +61,9 @@ export default function Home() {
 
 	async function createFigmaPullRequest() {
 		if (isBusy) return
+		const project = getProjectManager().getActive()
+		if (!project) return
 		router.push("/status")
-		createPullRequestOperations.createFigmaPullRequest()
+		createPullRequestOperations.createFigmaPullRequest(project)
 	}
 }

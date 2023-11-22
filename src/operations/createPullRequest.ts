@@ -9,14 +9,14 @@ import type {
 import { ValueType } from "@/types/figma"
 import type { CreatePullRequestStatus, CreatePullRequestStep, CreatePullRequestSubstep } from "@/types/operation"
 import type { JsonFigmaFile, JsonManifest } from "@/types/manifest"
-import { getManifestPath } from "@/utils/config"
+import type { Project } from "@/projects"
 import { getFigmaFileFriendlyName, getFigmaFilePublishedVariables, getFigmaFileVariables } from "@/utils/figma"
 import { GitHubUploadFile, createBranch, createPullRequest, getFileJSON, parseGitHubBlobUrl, uploadFiles } from "@/utils/github"
 import { figmaColorToTokenJsonColor } from "@/utils/figma"
 import { getFriendlyTokenJSON, replaceAllTokensWithPlaceholders, type JsonToken, type JsonTokenDocument } from "@/utils/tokenjson"
 
 interface CreatePullRequestMethods {
-	createFigmaPullRequest(): Promise<void>
+	createFigmaPullRequest(project: Project): Promise<void>
 }
 
 let instance: CreatePullRequestOperation | undefined
@@ -88,13 +88,13 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 		return this.#replaceStep(step, { ...step, substeps: [...step.substeps, substep] })
 	}
 
-	async createFigmaPullRequest() {
+	async createFigmaPullRequest(project: Project) {
 		// TODO: Exception handling
 
 		this.#status = { title: "Create pull request", progress: "busy", steps: [] }
 		this.#onUpdate()
 
-		const gitHub = parseGitHubBlobUrl(getManifestPath()!)
+		const gitHub = parseGitHubBlobUrl(project.manifestUrl)
 		if (!gitHub) return
 
 		let canContinue = true
@@ -114,7 +114,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 		this.#addStep(gitHubStep)
 
 		try {
-			manifest = await getFileJSON(gitHub.owner, gitHub.repo, gitHub.branch, gitHub.path)
+			manifest = await getFileJSON(project, gitHub.owner, gitHub.repo, gitHub.branch, gitHub.path)
 			this.#status.title = manifest.name
 			gitHubStep = this.#updateStep(gitHubStep, { progress: "done" })
 		} catch (ex) {
@@ -146,9 +146,9 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 			}
 			figmaStep = this.#addStep(figmaStep)
 			const [friendlyName, figmaVariablesData, figmaPublishedVariablesDataById] = await Promise.all([
-				getFigmaFileFriendlyName(fileKey),
-				getFigmaFileVariables(fileKey),
-				getFigmaFilePublishedVariables(fileKey),
+				getFigmaFileFriendlyName(project, fileKey),
+				getFigmaFileVariables(project, fileKey),
+				getFigmaFilePublishedVariables(project, fileKey),
 			])
 
 			// The published variables data is returned keyed by id, but we'll look it up by subscribed_id, so re-index it now.
@@ -186,7 +186,13 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 							for (const filename of figmaFile.collections[collectionName].modes[modeName]) {
 								let fileContents: JsonTokenDocument | undefined
 								try {
-									fileContents = await getFileJSON(gitHub.owner, gitHub.repo, gitHub.branch, `${gitHub.path}/${filename}`)
+									fileContents = await getFileJSON(
+										project,
+										gitHub.owner,
+										gitHub.repo,
+										gitHub.branch,
+										`${gitHub.path}/${filename}`
+									)
 								} catch (ex) {
 									// TODO: Handle this differently if the file is not found versus if there was any other error (say, JSON parsing)
 								}
@@ -296,9 +302,10 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 		const commitMessage = "Changes from Figma"
 		const prTitle = `Changes from Figma ${new Date().toDateString()}`
 		const prBody = ""
-		const createBranchSha = await createBranch(gitHub.owner, gitHub.repo, gitHub.branch, branchName)
-		await uploadFiles(gitHub.owner, gitHub.repo, branchName, filesToUpload, createBranchSha, commitMessage)
+		const createBranchSha = await createBranch(project, gitHub.owner, gitHub.repo, gitHub.branch, branchName)
+		await uploadFiles(project, gitHub.owner, gitHub.repo, branchName, filesToUpload, createBranchSha, commitMessage)
 		const [newPullRequestUrl, newPullRequestNumber] = await createPullRequest(
+			project,
 			gitHub.owner,
 			gitHub.repo,
 			branchName,

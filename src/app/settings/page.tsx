@@ -7,22 +7,16 @@ import { AccentButton } from "@/components/Button"
 import { Content } from "@/components/ContentStack"
 import Textbox from "@/components/Textbox"
 import { useCreatePullRequest } from "@/operations/createPullRequest"
-import {
-	getFigmaAccessToken,
-	getGitHubAccessToken,
-	getManifestPath,
-	setFigmaAccessToken,
-	setGitHubAccessToken,
-	setManifestPath,
-} from "@/utils/config"
+import { getProjectManager } from "@/projects"
 import { parseGitHubBlobUrl } from "@/utils/github"
 
 export default function Settings() {
+	const project = getProjectManager().getActive()
 	const router = useRouter()
 	const [createPullRequestStatus, _createPullRequestOperations] = useCreatePullRequest()
-	const [newFigmaAccessToken, setNewFigmaAccessToken] = React.useState(getFigmaAccessToken() || "")
-	const [newGitHubAccessToken, setNewGitHubAccessToken] = React.useState(getGitHubAccessToken() || "")
-	const [newManifestPath, setNewManifestPath] = React.useState(getManifestPath() || "")
+	const [newFigmaAccessToken, setNewFigmaAccessToken] = React.useState(project ? project.figma.accessToken : "")
+	const [newGitHubAccessToken, setNewGitHubAccessToken] = React.useState(project ? project.gitHub.accessToken : "")
+	const [newManifestPath, setNewManifestPath] = React.useState(project ? project.manifestUrl : "")
 	const isProperlyConfigured = !!parseGitHubBlobUrl(newManifestPath) && !!newFigmaAccessToken && !!newGitHubAccessToken
 
 	return (
@@ -101,12 +95,22 @@ export default function Settings() {
 		</Content>
 	)
 
-	function onDone() {
+	async function onDone() {
 		if (!isProperlyConfigured) return
 
-		setManifestPath(newManifestPath)
-		setFigmaAccessToken(newFigmaAccessToken)
-		setGitHubAccessToken(newGitHubAccessToken)
+		const projectManager = getProjectManager()
+		const newProject = await projectManager.test({
+			manifestUrl: newManifestPath,
+			figma: {
+				accessToken: newFigmaAccessToken,
+			},
+			gitHub: {
+				accessToken: newGitHubAccessToken,
+			},
+		})
+		if (!newProject) return // TODO: Show an error when this throws
+		projectManager.clear()
+		projectManager.add(newProject)
 
 		router.push("/")
 	}
