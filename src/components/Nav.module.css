@@ -9,6 +9,13 @@ nav.root {
 	backdrop-filter: blur(10px);
 }
 
+@media (prefers-contrast: more) {
+	nav.root {
+		background-color: var(--figma-color-bg, white);
+		backdrop-filter: none;
+	}
+}
+
 nav.root a {
 	text-decoration: none;
 }

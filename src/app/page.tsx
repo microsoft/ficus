@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation"
 import { AccentButton } from "@/components/Button"
 import { Content } from "@/components/ContentStack"
 import { useCreatePullRequest } from "@/operations/createPullRequest"
-import { Project, getProjectManager } from "@/projects"
+import type { Project } from "@/projects"
+import { getProjectManager } from "@/projects"
 
 export default function Home() {
 	const router = useRouter()
