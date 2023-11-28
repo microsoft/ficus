@@ -62,43 +62,9 @@ tt {
 	font-family: "Cascadia Code", Consolas, "Courier New", monospace;
 }
 
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	margin: 20px 0;
-}
-
 h1 {
-	font-size: 64px;
-	font-weight: 300;
-	letter-spacing: -0.04em;
-	line-height: 1.25;
 	text-wrap: balance;
 	color: var(--figma-color-text-brand, #844699);
-}
-
-h2 {
-	font-size: 32px;
-	font-weight: 600;
-	line-height: 1.3333;
-}
-
-h3 {
-	font-size: 24px;
-	font-weight: 600;
-	line-height: 1.3333;
-}
-
-h4,
-h5,
-h6 {
-	font-size: 18px;
-	font-weight: normal;
-	line-height: 1.3333;
 }
 
 a,
@@ -113,11 +79,6 @@ a:focus-visible {
 	text-decoration-color: #9f65b3;
 }
 
-b,
-strong {
-	font-weight: 600;
-}
-
 img,
 svg {
 	border: none;
@@ -128,13 +89,4 @@ svg {
 button {
 	border-radius: 0;
 	border-width: 0;
-}
-
-input,
-button,
-textarea,
-select,
-option,
-optgroup {
-	font: inherit;
 }

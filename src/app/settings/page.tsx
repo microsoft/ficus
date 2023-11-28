@@ -3,7 +3,7 @@
 import React from "react"
 import styles from "./page.module.css"
 import { useRouter } from "next/navigation"
-import { Button, Input, Field } from "@fluentui/react-components"
+import { Button, Input, Field, Display, Title2, Title3, Body1 } from "@fluentui/react-components"
 import { Content } from "@/components/ContentStack"
 import { useCreatePullRequest } from "@/operations/createPullRequest"
 import { getProjectManager } from "@/projects"
@@ -22,82 +22,87 @@ export default function Settings() {
 
 	return (
 		<Content>
-			<h1>Login and settings</h1>
+			<Display as="h1">Login and settings</Display>
 			{createPullRequestStatus.progress !== "busy" ? (
 				<>
-					<p>Settings will be stored only on this device.</p>
+					<Body1 as="p" block>
+						Settings will be stored only on this device.
+					</Body1>
 					<div className={styles.vertical}>
-						<p>
-							<Field
-								label="GitHub link to ficus.json (e.g. https://github.com/TravisSpomer/MyTokens/blob/main/src/ficus.json)"
-								hint={
-									<>
-										If you don't have one, see{" "}
-										<a href="/help/onboarding/repo">Preparing your GitHub repo to work with Ficus</a>.
-									</>
-								}
-								validationState={errorText ? "error" : "none"}
-								validationMessage={errorText}
-							>
-								<Input
-									type="text"
-									required
-									value={newManifestPath}
-									disabled={isBusy}
-									onChange={ev => setNewManifestPath(ev.target.value)}
-									style={{ width: "100%" }}
-								/>
-							</Field>
-						</p>
-						{errorText && <div className={styles.error}>{errorText}</div>}
-						<p>
-							<Field label="Figma access token">
-								<Input
-									type="password"
-									required
-									value={newFigmaAccessToken}
-									disabled={isBusy}
-									onChange={ev => setNewFigmaAccessToken(ev.target.value)}
-									style={{ width: "100%" }}
-								/>
-							</Field>
-						</p>
-						<p>
-							<Field label="GitHub access token">
-								<Input
-									type="password"
-									required
-									value={newGitHubAccessToken}
-									disabled={isBusy}
-									onChange={ev => setNewGitHubAccessToken(ev.target.value)}
-									style={{ width: "100%" }}
-								/>
-							</Field>
-						</p>
+						<Field
+							label="GitHub link to ficus.json (e.g. https://github.com/TravisSpomer/MyTokens/blob/main/src/ficus.json)"
+							hint={
+								<>
+									If you don't have one, see{" "}
+									<a href="/help/onboarding/repo">Preparing your GitHub repo to work with Ficus</a>.
+								</>
+							}
+							validationState={errorText ? "error" : "none"}
+							validationMessage={errorText}
+						>
+							<Input
+								type="text"
+								required
+								value={newManifestPath}
+								disabled={isBusy}
+								onChange={ev => setNewManifestPath(ev.target.value)}
+								style={{ width: "100%" }}
+							/>
+						</Field>
+						<Field label="Figma access token">
+							<Input
+								type="password"
+								required
+								value={newFigmaAccessToken}
+								disabled={isBusy}
+								onChange={ev => setNewFigmaAccessToken(ev.target.value)}
+								style={{ width: "100%" }}
+							/>
+						</Field>
+						<Field label="GitHub access token">
+							<Input
+								type="password"
+								required
+								value={newGitHubAccessToken}
+								disabled={isBusy}
+								onChange={ev => setNewGitHubAccessToken(ev.target.value)}
+								style={{ width: "100%" }}
+							/>
+						</Field>
 					</div>
-					<Button appearance="primary" onClick={onDone} disabled={isBusy || !isProperlyConfigured}>
-						Save
-					</Button>
+					<Body1 as="p" block>
+						<Button appearance="primary" onClick={onDone} disabled={isBusy || !isProperlyConfigured}>
+							Save
+						</Button>
+					</Body1>
 				</>
 			) : (
-				<p>You can change settings after Ficus finishes opening a pull request.</p>
+				<Body1 as="p" block>
+					You can change settings after Ficus finishes opening a pull request.
+				</Body1>
 			)}
 			<div className={styles.bigspacer} />
-			<h2>How do I get access tokens?</h2>
-			<p>
+			<Title2 as="h2" block>
+				How do I get access tokens?
+			</Title2>
+			<Body1 as="p" block>
 				Treat an access token like a password and never share it with anyone. But unlike a password, once you paste your tokens
 				here, you don't need to save them anywhere else. Here's how you get them:
-			</p>
-			<h3>Figma</h3>
-			<p>
+			</Body1>
+			<Title3 as="h3" block>
+				Figma
+			</Title3>
+			<Body1 as="p" block>
 				In your{" "}
 				<a href="https://www.figma.com/settings" target="_blank">
 					Figma settings
 				</a>
 				, scroll down to Personal access tokens and click Generate new token. Copy and paste that token into the box above.
-			</p>
-			<h3>GitHub</h3>
-			<p>
+			</Body1>
+			<Title3 as="h3" block>
+				GitHub
+			</Title3>
+			<Body1 as="p" block>
 				You can generate a Personal Access Token from your{" "}
 				<a href="https://github.com/settings/tokens?type=beta" target="_blank">
 					GitHub Developer Settings page
@@ -105,7 +110,7 @@ export default function Settings() {
 				. Create a fine-grained PAT, with Resource Owner set to the account that owns the repo containing your tokens, Repository
 				Access set to All Repositories (or just the ones you need), and enable repository permissions for Contents, Metadata, and
 				Pull Requests. Copy and paste that token into the box above.
-			</p>
+			</Body1>
 		</Content>
 	)
 

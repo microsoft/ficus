@@ -2,14 +2,19 @@
 
 import React from "react"
 import styles from "./page.module.css"
+import { Display, Title2, Body1 } from "@fluentui/react-components"
 import { Content } from "@/components/ContentStack"
 
 export default function OnboardingRepo() {
 	return (
 		<Content>
-			<h1>Preparing your GitHub repo to work with Ficus</h1>
-			<h2>What you need</h2>
-			<p>Let's make sure you have everything you need:</p>
+			<Display as="h1">Preparing your GitHub repo to work with Ficus</Display>
+			<Title2 as="h2" block>
+				What you need
+			</Title2>
+			<Body1 as="p" block>
+				Let's make sure you have everything you need:
+			</Body1>
 			<ul>
 				<li>A repo on GitHub.com</li>
 				<li>
@@ -23,18 +28,24 @@ export default function OnboardingRepo() {
 				<li>A Figma enterprise plan (standard plans can't access these features)</li>
 				<li>An understanding of how your Figma variables relate to your tokens</li>
 			</ul>
-			<h2>How this will work</h2>
-			<p>
+			<Title2 as="h2" block>
+				How this will work
+			</Title2>
+			<Body1 as="p" block>
 				You'll need to add a file to your repo that tells Ficus how to interact with it. I recommend naming it{" "}
 				<code>ficus.json</code> but anything will work. All of the token JSON files that you want Ficus to update should be in the
 				same folder or subfolders. This Ficus config file links a variable collection in Figma with one or more token JSON files.
-			</p>
-			<p>Keep in mind that this is an internal tool and not supported or warranted in any way.</p>
-			<h2>Setting up ficus.json</h2>
-			<p>
+			</Body1>
+			<Body1 as="p" block>
+				Keep in mind that this is an internal tool and not supported or warranted in any way.
+			</Body1>
+			<Title2 as="h2" block>
+				Setting up ficus.json
+			</Title2>
+			<Body1 as="p" block>
 				Create a new <code>ficus.json</code> file in your repo either through the GitHub UI or your favorite text editor. You can
 				start with this text:
-			</p>
+			</Body1>
 			<pre className={styles.tabbed}>
 				<code>
 					{`{
@@ -56,12 +67,12 @@ export default function OnboardingRepo() {
 }`}
 				</code>
 			</pre>
-			<p>
+			<Body1 as="p" block>
 				The above example assumes that you have a single Figma file called "My variables file" that has a single variable collection
 				called "Global tokens" with a single mode called "Value". The tokens in the Value collection should be saved to{" "}
 				<code>global.json</code>. Of course, you'll need to adjust it to match how your tokens are organized. Here's what you can
 				change:
-			</p>
+			</Body1>
 			<ul>
 				<li>
 					<strong>name:</strong> This just helps you keep multiple Ficus configurations separate. It can be whatever you want.
@@ -91,18 +102,20 @@ export default function OnboardingRepo() {
 					</ul>
 				</li>
 			</ul>
-			<p>
+			<Body1 as="p" block>
 				Once you've created your Ficus config file, make sure that you commit and push. You'll need the GitHub URL of that file to
 				use Ficus. It will look something like this:
-			</p>
-			<p>
+			</Body1>
+			<Body1 as="p" block>
 				<code>https://github.com/TravisSpomer/MyTokens/blob/main/src/ficus.json</code>
-			</p>
-			<h2>What's next</h2>
-			<p>
+			</Body1>
+			<Title2 as="h2" block>
+				What's next
+			</Title2>
+			<Body1 as="p" block>
 				Ficus is now set up! The next thing you should do is perform a test run before inviting designers to make their first pull
 				requests.
-			</p>
+			</Body1>
 			<ul>
 				<li>Optionally, create a new fork or branch of your repo that you can use for your testing.</li>
 				<li>Make sure you get the correct URL for ficus.json in that fork or branch.</li>
@@ -118,22 +131,28 @@ export default function OnboardingRepo() {
 					Now they can make their first pull request with Ficus!
 				</li>
 			</ul>
-			<h2>How do I turn these design tokens into CSS?</h2>
-			<p>
+			<Title2 as="h2" block>
+				How do I turn these design tokens into CSS?
+			</Title2>
+			<Body1 as="p" block>
 				Ficus doesn't do anything like that, but there are lots of tools that can. Or, you can write your own: the design token
 				format is pretty simple.
-			</p>
-			<h2>What if my token names don't match between Figma and code?</h2>
-			<p>
+			</Body1>
+			<Title2 as="h2" block>
+				What if my token names don't match between Figma and code?
+			</Title2>
+			<Body1 as="p" block>
 				By default, a token named "Color/Red" in Figma will be saved in JSON as <code>Color.Red</code>. If that's not right, find
 				the variable in Figma and click Edit variable, and then scroll down to Code Syntax. Click the plus sign (+) and then Web,
 				and then type the name of the token there. Do that for every token that's named differently.
-			</p>
-			<h2>Security</h2>
-			<p>
+			</Body1>
+			<Title2 as="h2" block>
+				Security
+			</Title2>
+			<Body1 as="p" block>
 				Ficus has no special access to your repo: only people who already have access to your repo will be able to use Ficus to open
 				pull requests.
-			</p>
+			</Body1>
 		</Content>
 	)
 }
