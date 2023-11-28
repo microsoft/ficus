@@ -3,9 +3,8 @@
 import React from "react"
 import styles from "./page.module.css"
 import { useRouter } from "next/navigation"
-import { AccentButton } from "@/components/Button"
+import { Button, Input, Field } from "@fluentui/react-components"
 import { Content } from "@/components/ContentStack"
-import Textbox from "@/components/Textbox"
 import { useCreatePullRequest } from "@/operations/createPullRequest"
 import { getProjectManager } from "@/projects"
 import { parseGitHubBlobUrl } from "@/utils/github"
@@ -29,51 +28,56 @@ export default function Settings() {
 					<p>Settings will be stored only on this device.</p>
 					<div className={styles.vertical}>
 						<p>
-							<label>
-								GitHub link to ficus.json (e.g. https://github.com/TravisSpomer/MyTokens/blob/main/src/ficus.json)
-								<br />
-								<Textbox
+							<Field
+								label="GitHub link to ficus.json (e.g. https://github.com/TravisSpomer/MyTokens/blob/main/src/ficus.json)"
+								hint={
+									<>
+										If you don't have one, see{" "}
+										<a href="/help/onboarding/repo">Preparing your GitHub repo to work with Ficus</a>.
+									</>
+								}
+								validationState={errorText ? "error" : "none"}
+								validationMessage={errorText}
+							>
+								<Input
+									type="text"
 									required
 									value={newManifestPath}
 									disabled={isBusy}
 									onChange={ev => setNewManifestPath(ev.target.value)}
+									style={{ width: "100%" }}
 								/>
-								<br />
-								If you don't have one, see <a href="/help/onboarding/repo">Preparing your GitHub repo to work with Ficus</a>
-								.
-							</label>
+							</Field>
 						</p>
 						{errorText && <div className={styles.error}>{errorText}</div>}
 						<p>
-							<label>
-								Figma access token
-								<br />
-								<Textbox
+							<Field label="Figma access token">
+								<Input
 									type="password"
 									required
 									value={newFigmaAccessToken}
 									disabled={isBusy}
 									onChange={ev => setNewFigmaAccessToken(ev.target.value)}
+									style={{ width: "100%" }}
 								/>
-							</label>
+							</Field>
 						</p>
 						<p>
-							<label>
-								GitHub access token
-								<br />
-								<Textbox
+							<Field label="GitHub access token">
+								<Input
 									type="password"
 									required
 									value={newGitHubAccessToken}
 									disabled={isBusy}
 									onChange={ev => setNewGitHubAccessToken(ev.target.value)}
+									style={{ width: "100%" }}
 								/>
-							</label>
+							</Field>
 						</p>
 					</div>
-					<AccentButton onClick={onDone} disabled={isBusy || !isProperlyConfigured}>
+					<Button appearance="primary" onClick={onDone} disabled={isBusy || !isProperlyConfigured}>
 						Save
-					</AccentButton>
+					</Button>
 				</>
 			) : (
 				<p>You can change settings after Ficus finishes opening a pull request.</p>

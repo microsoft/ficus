@@ -3,8 +3,8 @@
 import React from "react"
 import styles from "./page.module.css"
 import Link from "next/link"
+import { Button } from "@fluentui/react-components"
 import { useRouter } from "next/navigation"
-import { AccentButton } from "@/components/Button"
 import { Content } from "@/components/ContentStack"
 import { useCreatePullRequest } from "@/operations/createPullRequest"
 import type { Project } from "@/projects"
@@ -23,6 +23,7 @@ export default function Home() {
 	return (
 		<Content>
 			<h1>You change variables &amp; Ficus changes code.</h1>
+
 			{projects === null ? null : isBusy ? (
 				<Link href="/status">Working...</Link>
 			) : (
@@ -31,9 +32,9 @@ export default function Home() {
 						<div key={project.manifestUrl}>
 							<h2>{project.name}</h2>
 							<div className={styles.horizontal}>
-								<AccentButton onClick={() => createFigmaPullRequest(project)} disabled={isBusy}>
+								<Button appearance="primary" onClick={() => createFigmaPullRequest(project)} disabled={isBusy}>
 									Create a pull request
-								</AccentButton>
+								</Button>
 							</div>
 						</div>
 					))}
