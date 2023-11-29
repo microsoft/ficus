@@ -11,7 +11,7 @@ nav.root {
 
 @media (prefers-contrast: more) {
 	nav.root {
-		background-color: var(--figma-color-bg, white);
+		background-color: white;
 		backdrop-filter: none;
 	}
 }

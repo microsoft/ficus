@@ -26,28 +26,17 @@ body,
 }
 
 :root {
-	--figma-color-bg: white;
-	--figma-color-bg-brand: #602872;
-	--figma-color-bg-disabled: #7c7c7c;
-	--figma-color-bg-onselected: #e6d4ec;
-	--figma-color-border: #7c7c7c;
-	--figma-color-border-brand-strong: #602872;
-	--figma-color-border-disabled-strong: rgba(0, 0, 0, 0.3);
-	--figma-color-border-selected: #9458a8;
-	--figma-color-icon: black;
-	--figma-color-text: black;
-	--figma-color-text-brand: #844699;
-	--figma-color-text-brand-hover: #9f65b3;
-	--figma-color-text-disabled: rgba(0, 0, 0, 0.3);
-	--figma-color-text-onbrand: white;
-	--figma-color-text-ondisabled: white;
+	--ficus-foreground: black;
+	--ficus-brand: #9458a8;
+	--ficus-brand-bold: #521766;
+	--ficus-brand-alpha-40: #84469966;
+	--ficus-background: #f7f3f9;
 }
 
 body {
 	display: flex;
 	flex-direction: column;
-	background-image: linear-gradient(to bottom right, #ecf8d0, #fbfef6 40%, #fbfdfe 60%, #e0ecf5);
-	background-attachment: fixed;
+	background-color: var(--ficus-background);
 }
 
 @media (prefers-contrast: more) {
@@ -64,19 +53,19 @@ tt {
 
 h1 {
 	text-wrap: balance;
-	color: var(--figma-color-text-brand, #844699);
+	color: var(--ficus-brand-bold);
 }
 
 a,
 a:visited {
-	color: var(--figma-color-text-brand, #007be5);
-	text-decoration-color: #84469966;
+	color: var(--ficus-brand);
+	text-decoration-color: var(--ficus-brand-alpha-40);
 }
 
 a:hover,
 a:focus-visible {
-	color: var(--figma-color-text-brand-hover, #9f65b3);
-	text-decoration-color: #9f65b3;
+	color: var(--ficus-brand);
+	text-decoration-color: var(--ficus-brand);
 }
 
 img,
