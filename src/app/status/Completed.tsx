@@ -13,7 +13,7 @@ export function Completed(props: CreatePullRequestCompletedStep) {
 					<p>Ready for review!</p>
 					<p>
 						<Link href={props.url} target="_blank">
-							Open in new tab
+							<strong>Open in new tab</strong>
 						</Link>
 					</p>
 				</>

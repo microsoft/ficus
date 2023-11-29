@@ -2,6 +2,7 @@
 
 import React from "react"
 import styles from "./page.module.css"
+import { Display, Body1 } from "@fluentui/react-components"
 import { Content } from "@/components/ContentStack"
 import { useCreatePullRequest } from "@/operations/createPullRequest"
 import Figma from "./Figma"
@@ -16,7 +17,7 @@ export default function Status() {
 		<Content>
 			{createPullRequestStatus.progress !== "none" ? (
 				<>
-					<h1>{createPullRequestStatus.title}</h1>
+					<Display as="h1">{createPullRequestStatus.title}</Display>
 					<ul className={styles.status}>
 						{createPullRequestStatus.steps.map((step, index) =>
 							step.type === "github" ? (
@@ -35,8 +36,10 @@ export default function Status() {
 				</>
 			) : (
 				<>
-					<h1>Ready!</h1>
-					<p>This page will show the current status, once there's some current status to show.</p>
+					<Display as="h1">Ready!</Display>
+					<Body1 as="p" block>
+						This page will show the current status, once there's some current status to show.
+					</Body1>
 				</>
 			)}
 		</Content>

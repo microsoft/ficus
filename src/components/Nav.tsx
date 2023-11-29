@@ -21,7 +21,7 @@ export function Nav(_props: NavProps) {
 								<Link href="/settings">Settings</Link>
 							</li>
 							<li>
-								<Link href="/help">Help</Link>
+								<Link href="/help">FAQ</Link>
 							</li>
 						</ul>
 					</Content>

@@ -1,4 +1,5 @@
 import "./styles.css"
+import { FluentProvider, ficusTheme } from "@/components/fluentui"
 import Nav from "@/components/Nav"
 import { ContentStack } from "@/components/ContentStack"
 
@@ -15,10 +16,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
 	return (
 		<html lang="en">
 			<body>
-				<Nav />
-				<main>
-					<ContentStack>{children}</ContentStack>
-				</main>
+				<FluentProvider theme={ficusTheme} style={{ backgroundColor: "unset" }}>
+					<Nav />
+					<main>
+						<ContentStack>{children}</ContentStack>
+					</main>
+				</FluentProvider>
 			</body>
 		</html>
 	)
