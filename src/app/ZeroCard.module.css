@@ -1,0 +1,32 @@
+.horizontal {
+	padding: 20px;
+	width: 100%;
+	display: grid;
+	gap: 16px;
+	grid-template-columns: 1fr auto 1fr auto 1fr;
+	grid-template-rows: auto auto;
+	grid-auto-flow: column;
+	align-items: center;
+	justify-items: center;
+	justify-content: center;
+}
+
+.horizontal svg {
+	max-width: 140px;
+}
+
+@media (max-width: 800px) {
+	.notnarrow {
+		display: none !important;
+	}
+
+	.horizontal {
+		gap: 40px;
+		grid-template-columns: minmax(auto, 180px);
+		grid-template-rows: repeat(6, auto);
+	}
+
+	.horizontal svg {
+		max-width: unset;
+	}
+}

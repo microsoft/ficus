@@ -10,6 +10,7 @@ import { useCreatePullRequest } from "@/operations/createPullRequest"
 import type { Project } from "@/projects"
 import { getProjectManager } from "@/projects"
 import { ProjectCard } from "./ProjectCard"
+import { ZeroCard } from "./ZeroCard"
 
 export default function Home() {
 	const router = useRouter()
@@ -52,6 +53,9 @@ export default function Home() {
 				) : (
 					<>
 						<Display as="h1">You change variables &amp; Ficus changes code.</Display>
+						<p></p>
+
+						<ZeroCard />
 
 						<Title2 as="h2" block>
 							It'll just take a few minutes to get started.
