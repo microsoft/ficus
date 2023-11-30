@@ -20,6 +20,7 @@
 	height: 100%;
 	margin: 0;
 	padding: 0;
+
 	user-select: none;
 }
 
@@ -36,6 +37,7 @@ body {
 	flex-direction: column;
 	margin: 0;
 	padding: 0;
+	min-height: 100%;
 
 	background-color: var(--ficus-background);
 }
@@ -44,6 +46,10 @@ body {
 	body {
 		background-image: none;
 	}
+}
+
+main {
+	flex: 1;
 }
 
 pre,
@@ -74,9 +80,4 @@ svg {
 	border: none;
 	page-break-inside: avoid;
 	vertical-align: baseline;
-}
-
-button {
-	border-radius: 0;
-	border-width: 0;
 }

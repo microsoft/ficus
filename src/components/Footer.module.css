@@ -1,0 +1,47 @@
+footer.root {
+	position: relative;
+	margin-top: 4em;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 20px 1rem;
+
+	color: #616161;
+	background-color: #faf8fc;
+}
+
+footer.root a {
+	color: #616161;
+	text-decoration: none;
+}
+
+footer.root a:hover,
+footer.root a:focus-visible {
+	text-decoration: underline;
+}
+
+.horiz {
+	position: relative;
+	display: flex;
+	margin: 0;
+	padding: 0;
+	align-items: center;
+	gap: 2em;
+}
+
+@media (max-width: 600px) {
+	.horiz {
+		flex-direction: column;
+		gap: 0.5em;
+	}
+}
+
+.horiz li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.horiz .spacer {
+	flex: 1;
+}
