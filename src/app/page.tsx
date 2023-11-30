@@ -11,7 +11,7 @@ import type { Project } from "@/projects"
 import { getProjectManager } from "@/projects"
 import { ProjectCard } from "./ProjectCard"
 
-export function Home() {
+export default function Home() {
 	const router = useRouter()
 	const [createPullRequestStatus, createPullRequestOperations] = useCreatePullRequest()
 	const isBusy = createPullRequestStatus.progress === "busy"
@@ -89,4 +89,3 @@ export function Home() {
 		forceUpdate()
 	}
 }
-export default Home
