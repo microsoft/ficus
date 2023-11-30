@@ -1,43 +1,59 @@
-nav.root {
+header.root {
 	position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
-	padding: 20px 0;
+	padding: 20px 1rem;
+	z-index: 1; /* otherwise position:relative items in the body will draw on top */
 
-	background-color: rgba(255, 255, 255, 0.7);
+	background-color: rgba(255, 255, 255, 0.8);
 	backdrop-filter: blur(10px);
+	box-shadow:
+		0 2px 4px rgba(0, 0, 0, 0.14),
+		0 2px 2px rgba(0, 0, 0, 0.14);
 }
 
 @media (prefers-contrast: more) {
-	nav.root {
+	header.root {
 		background-color: white;
 		backdrop-filter: none;
 	}
 }
 
-nav.root a {
+header.root a {
 	text-decoration: none;
 }
 
-nav.root a:hover,
-nav.root a:focus-visible {
+header.root a:hover,
+header.root a:focus-visible {
 	text-decoration: underline;
 }
 
-.logo {
+.logo a {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+
 	font-weight: 600;
+}
+
+.logo img {
+	width: 24px;
+	height: 24px;
+	transform: translateY(-2px);
 }
 
 .under {
 	flex: none;
-	height: 60px;
+	height: 96px;
 }
 
 .horiz {
+	position: relative;
 	display: flex;
 	margin: 0;
 	padding: 0;
+	align-items: center;
 	gap: 2em;
 }
 
@@ -45,4 +61,8 @@ nav.root a:focus-visible {
 	margin: 0;
 	padding: 0;
 	list-style: none;
+}
+
+.horiz .spacer {
+	flex: 1;
 }
