@@ -3,6 +3,7 @@
 import React from "react"
 import styles from "./page.module.css"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Display, Title2, Body1, Button } from "@fluentui/react-components"
 import { Content, ContentStack } from "@/components/ContentStack"
 import { useCreatePullRequest } from "@/operations/createPullRequest"
@@ -11,9 +12,11 @@ import { getProjectManager } from "@/projects"
 import { ProjectCard } from "./ProjectCard"
 
 export function Home() {
-	const [createPullRequestStatus, _createPullRequestOperations] = useCreatePullRequest()
+	const router = useRouter()
+	const [createPullRequestStatus, createPullRequestOperations] = useCreatePullRequest()
 	const isBusy = createPullRequestStatus.progress === "busy"
 	const [projects, setProjects] = React.useState<readonly Project[] | null>(null)
+	const [, forceUpdate] = React.useReducer(_ => !_, false)
 
 	React.useEffect(() => {
 		setProjects(getProjectManager().getAll())
@@ -37,7 +40,13 @@ export function Home() {
 							</Button>
 						</div>
 						{projects.map(project => (
-							<ProjectCard key={project.manifestUrl} project={project} />
+							<ProjectCard
+								key={project.manifestUrl}
+								project={project}
+								isBusy={isBusy}
+								createFigmaPullRequest={createFigmaPullRequest}
+								forgetProject={forgetProject}
+							/>
 						))}
 					</>
 				) : (
@@ -66,5 +75,18 @@ export function Home() {
 			</Content>
 		</ContentStack>
 	)
+
+	async function createFigmaPullRequest(project: Project) {
+		if (isBusy || !project) return
+		router.push("/status")
+		createPullRequestOperations.createFigmaPullRequest(project)
+	}
+
+	async function forgetProject(project: Project) {
+		if (isBusy || !project) return
+		getProjectManager().remove(project.manifestUrl)
+		// Project manager isn't a store and doesn't notify changes, so we need to force an update
+		forceUpdate()
+	}
 }
 export default Home
