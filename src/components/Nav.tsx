@@ -19,11 +19,6 @@ export function Nav(_props: NavProps) {
 								<Subtitle2>Ficus</Subtitle2>
 							</Link>
 						</li>
-						<li>
-							<Link href="/settings">
-								<Subtitle2 style={{ fontWeight: "unset" }}>Settings</Subtitle2>
-							</Link>
-						</li>
 						<div className={styles.spacer}></div>
 						<li className={styles.right}>
 							<Link href="/help">

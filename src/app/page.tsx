@@ -36,7 +36,7 @@ export default function Home() {
 								Your projects
 							</Title2>
 							<div className={styles.spacer}></div>
-							<Button appearance="outline" disabled>
+							<Button appearance="outline" onClick={() => router.push("/projects/add")}>
 								Add a project
 							</Button>
 						</div>

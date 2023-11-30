@@ -1,12 +1,15 @@
 "use client"
 
 import React from "react"
+import { useRouter } from "next/navigation"
 import styles from "./ZeroCard.module.css"
-import { Card, Subtitle1, LargeTitle } from "@fluentui/react-components"
+import { Button, Card, Subtitle1, LargeTitle } from "@fluentui/react-components"
 import SwatchGrid from "@/assets/swatchgrid.svg"
 import Diff from "@/assets/diff.svg"
 
 export function ZeroCard() {
+	const router = useRouter()
+
 	return (
 		<Card size="large">
 			<div className={styles.horizontal}>
@@ -24,6 +27,9 @@ export function ZeroCard() {
 				<div className={styles.notnarrow}></div>
 				<Diff />
 				<Subtitle1 align="center">Review and merge tokens on GitHub</Subtitle1>
+				<Button appearance="primary" className={styles.lastrow} onClick={() => router.push("/projects/add")}>
+					Try it now
+				</Button>
 			</div>
 		</Card>
 	)

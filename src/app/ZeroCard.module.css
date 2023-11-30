@@ -15,6 +15,11 @@
 	max-width: 140px;
 }
 
+.lastrow {
+	grid-column: 1 / -1;
+	grid-row: -1;
+}
+
 @media (max-width: 800px) {
 	.notnarrow {
 		display: none !important;
