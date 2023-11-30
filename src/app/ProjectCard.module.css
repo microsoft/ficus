@@ -1,0 +1,14 @@
+.horizontal {
+	display: flex;
+	gap: 0.5em;
+}
+
+@media (max-width: 400px) {
+	.horizontal {
+		flex-direction: column;
+	}
+}
+
+.spacer {
+	flex: 1;
+}

@@ -7,11 +7,11 @@ footer.root {
 	padding: 20px 1rem;
 
 	color: #616161;
-	background-color: #faf8fc;
+	background-color: rgba(255, 255, 255, 0.5);
 }
 
 footer.root a {
-	color: #616161;
+	color: inherit;
 	text-decoration: none;
 }
 
