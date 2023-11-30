@@ -29,7 +29,7 @@ footer.root a:focus-visible {
 	gap: 2em;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 480px) {
 	.horiz {
 		flex-direction: column;
 		gap: 0.5em;
