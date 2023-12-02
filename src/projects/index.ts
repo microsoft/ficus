@@ -26,8 +26,6 @@ export interface Project {
 	}
 }
 
-type PartialProject = Omit<Project, "name">
-
 const ProjectsStorageKey = "Projects"
 const LegacyManifestPathStorageKey = "Manifest path"
 const LegacyGitHubAccessTokenStorageKey = "GitHub access token"
@@ -71,6 +69,9 @@ class ProjectManager {
 
 	#save() {
 		localStorage.setItem(ProjectsStorageKey, JSON.stringify(this.#data))
+		localStorage.removeItem(LegacyManifestPathStorageKey)
+		localStorage.removeItem(LegacyGitHubAccessTokenStorageKey)
+		localStorage.removeItem(LegacyFigmaAccessTokenStorageKey)
 	}
 
 	#findIndex(manifestUrl: string): number {
@@ -85,26 +86,53 @@ class ProjectManager {
 		return this.#data.projects
 	}
 
-	getActive(): Project | null {
-		// TODO: Delete this shim once multiple projects are supported!
-		return this.#data.projects.length ? this.#data.projects[0] : null
-	}
-
 	getItem(manifestUrl: string): Readonly<Project> | null {
 		const index = this.#findIndex(manifestUrl)
 		return index >= 0 ? this.#data.projects[index] : null
 	}
 
-	async test(project: PartialProject): Promise<Project | null> {
-		const repoInfo = parseGitHubBlobUrl(project.manifestUrl)
-		if (!repoInfo) return null
-		const newProject: Project = {
-			...project,
-			name: repoInfo ? `${repoInfo.owner}/${repoInfo.repo} (${repoInfo.branch})` : "New project",
+	async test(project: Partial<Project>): Promise<TestResults> {
+		const results: TestResults = {
+			isProjectLocationValid: false,
+			isGitHubAccessValid: false,
+			isFigmaAccessValid: false,
+			project: null,
 		}
-		const manifest = await getFileJSON(newProject, repoInfo.owner, repoInfo.repo, repoInfo.branch, repoInfo.path)
-		newProject.name = manifest.name
-		return newProject
+
+		// Manifest URL is mandatory, and must be a valid GitHub URL.
+		if (!project.manifestUrl) return results
+		const repoInfo = parseGitHubBlobUrl(project.manifestUrl)
+		if (!repoInfo) return results
+		results.isProjectLocationValid = true
+
+		// GitHub access token must be valid, and must be sufficient for accessing the project file.
+		if (!project.gitHub || !project.gitHub.accessToken) return results
+		let projectName: string
+		try {
+			const manifest = await getFileJSON(
+				project as Pick<Project, "gitHub">,
+				repoInfo.owner,
+				repoInfo.repo,
+				repoInfo.branch,
+				repoInfo.path
+			)
+			projectName = manifest.name
+			if (!projectName) return results
+		} catch (ex) {
+			return results
+		}
+		results.isGitHubAccessValid = true
+
+		// Figma access token must be present.
+		if (!project.figma || !project.figma.accessToken) return results
+		results.isFigmaAccessValid = true
+
+		// Looks good! If everything's valid, return the full Project object.
+		results.project = {
+			...project,
+			name: projectName,
+		} as Project
+		return results
 	}
 
 	add(project: Project) {
@@ -126,4 +154,11 @@ class ProjectManager {
 		this.#data.projects.splice(0, Infinity)
 		this.#save()
 	}
+}
+
+interface TestResults {
+	isProjectLocationValid: boolean
+	isGitHubAccessValid: boolean
+	isFigmaAccessValid: boolean
+	project: Project | null
 }

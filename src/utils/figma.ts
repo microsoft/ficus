@@ -37,7 +37,7 @@ export function figmaColorToTokenJsonColor(rgba: FigmaRGBA): string {
 	return `#${toHex2(rgba.r)}${toHex2(rgba.g)}${toHex2(rgba.b)}${rgba.a !== undefined && rgba.a < 1.0 ? toHex2(rgba.a) : ""}`
 }
 
-async function call(project: Project, url: string, options?: RequestInit): Promise<any> {
+async function call(project: Pick<Project, "figma">, url: string, options?: RequestInit): Promise<any> {
 	const response = await fetch(
 		url,
 		mergeRequestInit(

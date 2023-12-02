@@ -40,15 +40,17 @@ export default function Home() {
 								Add a project
 							</Button>
 						</div>
-						{projects.map(project => (
-							<ProjectCard
-								key={project.manifestUrl}
-								project={project}
-								isBusy={isBusy}
-								createFigmaPullRequest={createFigmaPullRequest}
-								forgetProject={forgetProject}
-							/>
-						))}
+						<div className={styles.projectlist}>
+							{projects.map(project => (
+								<ProjectCard
+									key={project.manifestUrl}
+									project={project}
+									isBusy={isBusy}
+									createFigmaPullRequest={createFigmaPullRequest}
+									forgetProject={forgetProject}
+								/>
+							))}
+						</div>
 					</>
 				) : (
 					<>
@@ -62,18 +64,14 @@ export default function Home() {
 						</Title2>
 
 						<Body1 as="p" block>
-							You only have to do this once. Choose which page sounds more appropriate for you:
+							An engineer who works in your repo needs to finish a few setup steps described in{" "}
+							<Link href="/help/onboarding/repo">Preparing your GitHub repo to work with Ficus</Link>. Then you're ready to
+							go!
 						</Body1>
-						<ul>
-							<li>
-								<a href="/help/onboarding/repo">Preparing your GitHub repo to work with Ficus</a> (recommended for
-								engineers)
-							</li>
-							<li>
-								<a href="/help/onboarding/usage">Setting up Ficus and making your first pull request</a> (recommended for
-								designers)
-							</li>
-						</ul>
+
+						<Body1 as="p" block>
+							Ficus is an internal tool and is not supported or warranted in any way.
+						</Body1>
 					</>
 				)}
 			</Content>

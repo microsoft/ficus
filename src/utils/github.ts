@@ -20,7 +20,7 @@ export function parseGitHubBlobUrl(url: string): { owner: string; repo: string; 
 	}
 }
 
-async function call<T = any>(project: Project, url: string, options?: RequestInit): Promise<T> {
+async function call<T = any>(project: Pick<Project, "gitHub">, url: string, options?: RequestInit): Promise<T> {
 	const response = await fetch(
 		url,
 		mergeRequestInit(
@@ -60,7 +60,13 @@ export async function getRepoContents(
 	throw new Error(`The path "${path}" exists but we failed to list its contents.`)
 }
 
-export async function getFileJSON(project: Project, owner: string, repo: string, branch: string, path: string): Promise<any> {
+export async function getFileJSON(
+	project: Pick<Project, "gitHub">,
+	owner: string,
+	repo: string,
+	branch: string,
+	path: string
+): Promise<any> {
 	return call(project, `https://api.github.com/repos/${owner}/${repo}/contents${ensureSlash(path)}?ref=${branch}`, {
 		headers: { Accept: "application/vnd.github.raw" },
 	})
