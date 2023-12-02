@@ -34,17 +34,13 @@ export default function OnboardingRepo() {
 			<Body1 as="p" block>
 				You'll need to add a file to your repo that tells Ficus how to interact with it. I recommend naming it{" "}
 				<code>ficus.json</code> but anything will work. All of the token JSON files that you want Ficus to update should be in the
-				same folder or subfolders. This Ficus config file links a variable collection in Figma with one or more token JSON files.
-			</Body1>
-			<Body1 as="p" block>
-				Keep in mind that this is an internal tool and not supported or warranted in any way.
+				same folder or subfolders. This Ficus project file links a variable collection in Figma with one or more token JSON files.
 			</Body1>
 			<Title2 as="h2" block>
-				Setting up ficus.json
+				Setting up the project file
 			</Title2>
 			<Body1 as="p" block>
-				Create a new <code>ficus.json</code> file in your repo either through the GitHub UI or your favorite text editor. You can
-				start with this text:
+				Create a new JSON file in your repo either through the GitHub UI or your favorite text editor. You can start with this text:
 			</Body1>
 			<pre className={styles.tabbed}>
 				<code>
@@ -118,7 +114,7 @@ export default function OnboardingRepo() {
 			</Body1>
 			<ul>
 				<li>Optionally, create a new fork or branch of your repo that you can use for your testing.</li>
-				<li>Make sure you get the correct URL for ficus.json in that fork or branch.</li>
+				<li>Each branch or fork will have its own project file URL, so make sure you get the correct one.</li>
 				<li>
 					Read through the steps to{" "}
 					<strong>
@@ -127,8 +123,8 @@ export default function OnboardingRepo() {
 					.
 				</li>
 				<li>
-					Once you've verified that things are working properly, share the GitHub URL of your ficus.json file with your designer.
-					Now they can make their first pull request with Ficus!
+					Once you've verified that things are working properly, share the GitHub URL of your project file (ficus.json) with your
+					designer. Now they can make their first pull request with Ficus!
 				</li>
 			</ul>
 			<Title2 as="h2" block>
