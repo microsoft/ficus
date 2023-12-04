@@ -34,19 +34,6 @@
 
 .card {
 	position: relative;
-	overflow: hidden;
-	display: flex;
-	flex-direction: column;
-	gap: 0.5em;
-
-	padding: 16px;
-	background-color: white;
-	border: 1px solid #00000040;
-	border-radius: 8px;
-	box-shadow: 0 4px 4px #00000020;
-
-	line-height: 1;
-
 	animation: show 600ms;
 }
 
@@ -67,16 +54,22 @@
 	}
 }
 
+.cardcontent {
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5em;
+}
+
+.cardcontent > * {
+	margin: 0;
+	line-height: 1 !important;
+}
+
 .icon {
 	position: absolute;
 	right: 12px;
 	bottom: 12px;
-}
-
-.card > * {
-	margin: 0;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 .substeps {

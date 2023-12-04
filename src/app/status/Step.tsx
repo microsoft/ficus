@@ -1,5 +1,6 @@
 import React from "react"
 import styles from "./Step.module.css"
+import { Card } from "@fluentui/react-components"
 import Checkmark from "@/assets/checkmark.svg"
 import NoEntry from "@/assets/noentry.svg"
 import Spinner from "@/assets/spinner.svg"
@@ -27,8 +28,10 @@ export function Step(props: StepProps) {
 				) : null}
 			</span>
 			<div className={styles.card}>
-				{props.icon && <div className={styles.icon}>{props.icon}</div>}
-				{props.children}
+				<Card size="large">
+					<div className={styles.cardcontent}>{props.children}</div>
+					{props.icon && <div className={styles.icon}>{props.icon}</div>}
+				</Card>
 			</div>
 			{props.substeps.length > 0 && (
 				<ul className={styles.substeps}>

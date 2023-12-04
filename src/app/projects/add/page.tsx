@@ -14,8 +14,6 @@ const enum Pages {
 	GitHubToken,
 	FigmaToken,
 	Done,
-	// Total number of pages
-	Count,
 }
 
 export default function AddProject() {
@@ -63,7 +61,7 @@ export default function AddProject() {
 							</>
 						) : currentPage === Pages.ProjectLocation ? (
 							<>
-								<Title1 as="h2">Project location</Title1>
+								<Title1 as="h2">Add your project file</Title1>
 								<Body1 as="p" block>
 									The Ficus project file tells Ficus which variable collections in which Figma files are connected to
 									files on GitHub. If an engineer partner set up Ficus already, they can tell you what to paste here.
@@ -85,7 +83,7 @@ export default function AddProject() {
 							</>
 						) : currentPage === Pages.GitHubToken ? (
 							<>
-								<Title1 as="h2">GitHub access token</Title1>
+								<Title1 as="h2">Add your GitHub access token</Title1>
 								<Body1 as="p" block>
 									Treat it like a password and don't share it with anyone. We'll save it on this device so you don't have
 									to.
@@ -122,7 +120,7 @@ export default function AddProject() {
 							</>
 						) : currentPage === Pages.FigmaToken ? (
 							<>
-								<Title1 as="h2">Figma access token</Title1>
+								<Title1 as="h2">Add your Figma access token</Title1>
 								<Body1 as="p" block>
 									Treat it like a password and don't share it with anyone. We'll save it on this device so you don't have
 									to.
@@ -153,7 +151,7 @@ export default function AddProject() {
 						) : null}
 						<div className={styles.horizontal}>
 							<div>
-								{currentPage > 0 && currentPage < Pages.Count - 1 && (
+								{currentPage > 0 && currentPage < Pages.Done && (
 									<Button appearance="secondary" onClick={previousPage} disabled={isBusy}>
 										Back
 									</Button>
