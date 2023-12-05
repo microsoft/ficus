@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Display, Title2, Body1, Button } from "@fluentui/react-components"
 import { Content, ContentStack } from "@/components/ContentStack"
+import { LinkButton } from "@/components/LinkButton"
 import { useCreatePullRequest } from "@/operations/createPullRequest"
 import type { Project } from "@/projects"
 import { getProjectManager } from "@/projects"
@@ -36,9 +37,9 @@ export default function Home() {
 								Your projects
 							</Title2>
 							<div className={styles.spacer}></div>
-							<Button appearance="outline" onClick={() => router.push("/projects/add")}>
+							<LinkButton appearance="outline" href="/projects/add">
 								Add a project
-							</Button>
+							</LinkButton>
 						</div>
 						<div className={styles.projectlist}>
 							{projects.map(project => (

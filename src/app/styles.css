@@ -63,14 +63,14 @@ h1 {
 	color: var(--ficus-brand-bold);
 }
 
-a,
-a:visited {
+a:not(.linkbutton),
+a:visited:not(.linkbutton) {
 	color: var(--ficus-brand);
 	text-decoration-color: var(--ficus-brand-alpha-40);
 }
 
-a:hover,
-a:focus-visible {
+a:hover:not(.linkbutton),
+a:focus-visible:not(.linkbutton) {
 	color: var(--ficus-brand);
 	text-decoration-color: var(--ficus-brand);
 }

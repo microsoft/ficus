@@ -1,6 +1,6 @@
 import React from "react"
-import Link from "next/link"
-import { Title3, Body1, Button } from "@fluentui/react-components"
+import { Title3, Body1 } from "@fluentui/react-components"
+import { LinkButton } from "@/components/LinkButton"
 import Icon from "@/assets/github.svg"
 import { CreatePullRequestCompletedStep } from "@/types/operation"
 import Step from "./Step"
@@ -17,9 +17,9 @@ export function Completed(props: CreatePullRequestCompletedStep) {
 						Ready for review!
 					</Body1>
 					<Body1 as="p" block>
-						<Button as="a" href={props.url} target="_blank" appearance="primary" size="large">
+						<LinkButton href={props.url} target="_blank" appearance="primary" size="large">
 							Open in new tab
-						</Button>
+						</LinkButton>
 					</Body1>
 				</>
 			) : (

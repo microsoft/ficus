@@ -20,7 +20,7 @@ export default function AddProject() {
 	const router = useRouter()
 	const [isBusy, setIsBusy] = React.useState(false)
 	const [currentPage, setCurrentPage] = React.useState(0)
-	const isFirstProject = getProjectManager().length === 0
+	const [isFirstProject, setIsFirstProject] = React.useState(true)
 	const [newManifestPath, setNewManifestPath] = React.useState("")
 	const [manifestPathError, setManifestPathError] = React.useState<string | null>(null)
 	const [newGitHubAccessToken, setNewGitHubAccessToken] = React.useState("")
@@ -29,10 +29,20 @@ export default function AddProject() {
 	const [figmaError, setFigmaError] = React.useState<string | null>(null)
 	const [finalProject, setFinalProject] = React.useState<Project | null>(null)
 
+	React.useEffect(() => {
+		setIsFirstProject(getProjectManager().length === 0)
+	}, [])
+
 	return (
 		<ContentStack>
 			<Content>
-				{isFirstProject ? <Display as="h1">Get started</Display> : <Display as="h1">Add a project</Display>}
+				{currentPage === Pages.Done ? (
+					<Display as="h1">All done</Display>
+				) : isFirstProject ? (
+					<Display as="h1">Get started</Display>
+				) : (
+					<Display as="h1">Add a project</Display>
+				)}
 				<p></p>
 				<Card size="large">
 					<div className={styles.cardcontent}>
