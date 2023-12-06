@@ -8,6 +8,10 @@
 	flex: 1;
 }
 
+.zero {
+	margin: 2em 0 4em 0;
+}
+
 .projectlist {
 	display: flex;
 	flex-direction: column;

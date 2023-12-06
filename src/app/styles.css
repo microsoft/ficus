@@ -27,7 +27,6 @@
 :root {
 	--ficus-foreground: black;
 	--ficus-brand: #9458a8;
-	--ficus-brand-bold: #521766;
 	--ficus-brand-alpha-40: #84469966;
 	--ficus-background: #f7f3f9;
 }
@@ -60,7 +59,6 @@ tt {
 
 h1 {
 	text-wrap: balance;
-	color: var(--ficus-brand-bold);
 }
 
 a:not(.linkbutton),

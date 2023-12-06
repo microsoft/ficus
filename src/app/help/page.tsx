@@ -12,8 +12,8 @@ export default function Help() {
 				It's an internal tool
 			</Title2>
 			<Body1 as="p" block>
-				<Body1Strong>This is an internal tool and not supported or warranted in any way.</Body1Strong> No guarantees are made that
-				this will work for you or even continue to be accessible, or that it will continue to be developed.
+				<Body1Strong>This is an internal tool from Microsoft Design and not supported or warranted in any way.</Body1Strong> No
+				guarantees are made that this will work for you or even continue to be accessible, or that it will continue to be developed.
 			</Body1>
 			<Title2 as="h2" block>
 				It connects variables in Figma to tokens in GitHub
@@ -25,7 +25,7 @@ export default function Help() {
 				<li>Make a change to one or more variables in Figma: say, making Color/Red darker</li>
 				<li>Click the "Create a pull request" button in Ficus</li>
 				<li>
-					Ficus opens a pull request on GitHub of the exact changes made to your variables: in this case, changing{" "}
+					Ficus opens a pull request on GitHub containing the exact changes made to your variables: in this example, changing{" "}
 					<code>Color.Red</code> from <code>#ff0000</code> to <code>#990000</code>.
 				</li>
 			</ol>
@@ -59,7 +59,7 @@ export default function Help() {
 				Legal info
 			</Title2>
 			<Body1 as="p" block>
-				Ficus is © 2023 Microsoft and developed by Travis Spomer from{" "}
+				Ficus is © 2023 Microsoft and developed by{" "}
 				<a href="https://microsoft.design/" target="_blank">
 					Microsoft Design
 				</a>
@@ -73,7 +73,7 @@ export default function Help() {
 				</a>
 				.{" "}
 				<a href="https://github.com/microsoft/ficus" target="_blank">
-					Ficus source on GitHub
+					Code on GitHub
 				</a>
 				.
 			</Body1>

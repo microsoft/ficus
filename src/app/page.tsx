@@ -56,22 +56,30 @@ export default function Home() {
 				) : (
 					<>
 						<Display as="h1">You change variables &amp; Ficus changes code.</Display>
-						<p></p>
 
-						<ZeroCard />
+						<div className={styles.zero}>
+							<ZeroCard />
+						</div>
 
 						<Title2 as="h2" block>
-							It'll just take a few minutes to get started.
+							What is Ficus?
 						</Title2>
 
 						<Body1 as="p" block>
-							An engineer who works in your repo needs to finish a few setup steps described in{" "}
-							<Link href="/help/onboarding/repo">Preparing your GitHub repo to work with Ficus</Link>. Then you're ready to
-							go!
+							Ficus syncs variables in Figma to tokens in GitHub. Update values in the single source of truth and let Ficus do
+							the rest.
 						</Body1>
 
 						<Body1 as="p" block>
-							Ficus is an internal tool and is not supported or warranted in any way.
+							Setup is easy. You'll need a Figma enterprise plan, and an engineer needs to{" "}
+							<Link href="/help/onboarding/repo">add a simple project file to the GitHub repo</Link>. Then Ficus automates
+							token handoff.
+						</Body1>
+
+						<Body1 as="p" block>
+							<LinkButton href="/help" appearance="outline">
+								Learn more about Ficus
+							</LinkButton>
 						</Body1>
 					</>
 				)}

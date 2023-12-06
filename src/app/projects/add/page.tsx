@@ -2,11 +2,28 @@
 
 import React from "react"
 import styles from "./page.module.css"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Display, Title1, Title2, Body1, Body1Strong, Card, Button, Input, Field } from "@fluentui/react-components"
+import {
+	Display,
+	Title1,
+	Title2,
+	Body1,
+	Body1Strong,
+	Card,
+	Button,
+	Input,
+	Field,
+	InfoLabel,
+	Accordion,
+	AccordionHeader,
+	AccordionItem,
+	AccordionPanel,
+} from "@fluentui/react-components"
 import { Content, ContentStack } from "@/components/ContentStack"
 import type { Project } from "@/projects"
 import { getProjectManager } from "@/projects"
+import { parseGitHubBlobUrl } from "@/utils/github"
 
 const enum Pages {
 	Welcome = 0,
@@ -33,11 +50,21 @@ export default function AddProject() {
 		setIsFirstProject(getProjectManager().length === 0)
 	}, [])
 
+	let repoOwner: string | null = null
+	let repoName: string | null = null
+	try {
+		const parsed = parseGitHubBlobUrl(newManifestPath)
+		repoOwner = parsed ? parsed.owner : null
+		repoName = parsed ? parsed.repo : null
+	} catch (ex) {
+		/* handled below */
+	}
+
 	return (
 		<ContentStack>
 			<Content>
 				{currentPage === Pages.Done ? (
-					<Display as="h1">All done</Display>
+					<Display as="h1">Ficus is ready to go</Display>
 				) : isFirstProject ? (
 					<Display as="h1">Get started</Display>
 				) : (
@@ -71,13 +98,15 @@ export default function AddProject() {
 							</>
 						) : currentPage === Pages.ProjectLocation ? (
 							<>
-								<Title1 as="h2">Add your project file</Title1>
+								<Title1 as="h2">Link your project file</Title1>
 								<Body1 as="p" block>
-									The Ficus project file tells Ficus which variable collections in which Figma files are connected to
-									files on GitHub. If an engineer partner set up Ficus already, they can tell you what to paste here.
+									Ficus needs a project file to know where your Figma variables are. If an engineer partner set up Ficus
+									already, they can tell you what to paste here.
 								</Body1>
 								<Field
-									label="Address of project on GitHub (e.g. https://github.com/TravisSpomer/MyTokens/blob/main/src/ficus.json)"
+									label="Address of project on GitHub"
+									hint="For example: https://github.com/TravisSpomer/MyTokens/blob/main/src/ficus.json"
+									required
 									validationState={manifestPathError ? "error" : "none"}
 									validationMessage={manifestPathError}
 								>
@@ -90,16 +119,64 @@ export default function AddProject() {
 										style={{ width: "100%" }}
 									/>
 								</Field>
+								<Accordion multiple={true}>
+									<AccordionItem value="moreinfo">
+										<AccordionHeader>Don't have a project file yet?</AccordionHeader>
+										<AccordionPanel>
+											<Body1 as="p" block>
+												See{" "}
+												<Link href="/help/onboarding/repo" target="_blank">
+													Preparing your GitHub repo to work with Ficus
+												</Link>
+												. You need to be comfortable editing JSON files for this part, so find an engineer partner
+												if that doesn't sound fun.
+											</Body1>
+										</AccordionPanel>
+									</AccordionItem>
+								</Accordion>
 							</>
 						) : currentPage === Pages.GitHubToken ? (
 							<>
-								<Title1 as="h2">Add your GitHub access token</Title1>
+								<Title1 as="h2">Add your GitHub Personal Access Token</Title1>
 								<Body1 as="p" block>
-									Treat it like a password and don't share it with anyone. We'll save it on this device so you don't have
-									to.
+									You can generate a Personal Access Token from your{" "}
+									<a href="https://github.com/settings/tokens?type=beta" target="_blank">
+										GitHub Developer Settings page
+									</a>
+									.
+									<ul>
+										<li>Create a fine-grained PAT.</li>
+										<li>
+											Set Resource Owner to{" "}
+											{repoOwner ? (
+												<Body1Strong>{repoOwner}</Body1Strong>
+											) : (
+												"the account that owns the repo containing your tokens"
+											)}
+											.
+										</li>
+										<li>
+											Set Repository Access to{" "}
+											{repoName ? (
+												<>
+													<Body1Strong>{repoName}</Body1Strong> or{" "}
+												</>
+											) : null}
+											All Repositories.
+										</li>
+										<li>Enable permissions for Contents, Metadata, and Pull Requests.</li>
+									</ul>
 								</Body1>
 								<Field
-									label="GitHub access token"
+									label={
+										<InfoLabel
+											required
+											info="Treat it like a password and don't share it with anyone. We'll save it on this device so you don't have
+									to."
+										>
+											GitHub access token
+										</InfoLabel>
+									}
 									validationState={gitHubError ? "error" : "none"}
 									validationMessage={gitHubError}
 								>
@@ -130,13 +207,24 @@ export default function AddProject() {
 							</>
 						) : currentPage === Pages.FigmaToken ? (
 							<>
-								<Title1 as="h2">Add your Figma access token</Title1>
+								<Title1 as="h2">Add your Figma Personal Access Token</Title1>
 								<Body1 as="p" block>
-									Treat it like a password and don't share it with anyone. We'll save it on this device so you don't have
-									to.
+									In your{" "}
+									<a href="https://www.figma.com/settings" target="_blank">
+										Figma settings
+									</a>
+									, scroll down to Personal access tokens and click Generate new token.
 								</Body1>
 								<Field
-									label="Figma access token"
+									label={
+										<InfoLabel
+											required
+											info="Treat it like a password and don't share it with anyone. We'll save it on this device so you don't have
+									to."
+										>
+											Figma access token
+										</InfoLabel>
+									}
 									validationState={figmaError ? "error" : "none"}
 									validationMessage={figmaError}
 								>
@@ -152,7 +240,6 @@ export default function AddProject() {
 							</>
 						) : currentPage === Pages.Done ? (
 							<>
-								<Title1 as="h2">You're all set up!</Title1>
 								<Title2 as="h3">{finalProject!.name}</Title2>
 								<Body1 as="p" block>
 									Ficus can now open pull requests to sync your variables to code.
@@ -170,59 +257,12 @@ export default function AddProject() {
 							<div className={styles.spacer}></div>
 							<div>
 								<Button appearance="primary" onClick={nextPage} disabled={isBusy}>
-									{currentPage === Pages.Done ? "Finish" : "Next"}
+									{currentPage >= Pages.Done ? "Got it" : currentPage === Pages.Done - 1 ? "Finish" : "Next"}
 								</Button>
 							</div>
 						</div>
 					</div>
 				</Card>
-			</Content>
-			<Content>
-				<div className={styles.aftercard}>
-					{currentPage === Pages.ProjectLocation ? (
-						<>
-							<Title2 as="h2" block>
-								Don't have a project set up yet?
-							</Title2>
-							<Body1 as="p" block>
-								If you don't have one, see <a href="/help/onboarding/repo">Preparing your GitHub repo to work with Ficus</a>
-								. You need to be comfortable editing JSON files for this part.
-							</Body1>
-						</>
-					) : currentPage === Pages.GitHubToken ? (
-						<>
-							<Title2 as="h2" block>
-								How to get a GitHub access token
-							</Title2>
-							<Body1 as="p" block>
-								You can generate a Personal Access Token from your{" "}
-								<a href="https://github.com/settings/tokens?type=beta" target="_blank">
-									GitHub Developer Settings page
-								</a>
-								. Create a fine-grained PAT, with Resource Owner set to the account that owns the repo containing your
-								tokens, Repository Access set to All Repositories (or just the ones you need), and enable repository
-								permissions for Contents, Metadata, and Pull Requests. Copy and paste that token into the box above.
-							</Body1>
-							<Body1 as="p" block>
-								A Personal Access Token is not related to design tokens—just a coincidence.
-							</Body1>
-						</>
-					) : currentPage === Pages.FigmaToken ? (
-						<>
-							<Title2 as="h2" block>
-								How to get a Figma access token
-							</Title2>
-							<Body1 as="p" block>
-								In your{" "}
-								<a href="https://www.figma.com/settings" target="_blank">
-									Figma settings
-								</a>
-								, scroll down to Personal access tokens and click Generate new token. Copy and paste that token into the box
-								above.
-							</Body1>
-						</>
-					) : null}
-				</div>
 			</Content>
 		</ContentStack>
 	)
