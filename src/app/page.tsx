@@ -66,13 +66,13 @@ export default function Home() {
 						</Title2>
 
 						<Body1 as="p" block>
-							Ficus syncs variables in Figma to tokens in GitHub. Update values in the single source of truth and let Ficus do
+							Ficus syncs variables in Figma to tokens in GitHub: update values in the single source of truth and let Ficus do
 							the rest.
 						</Body1>
 
 						<Body1 as="p" block>
-							Setup is easy. You'll need a Figma enterprise plan, and an engineer needs to{" "}
-							<Link href="/help/onboarding/repo">add a simple project file to the GitHub repo</Link>. Then Ficus automates
+							Setup is easy. You’ll need a Figma enterprise plan, and an engineer needs to{" "}
+							<Link href="/help/onboarding/repo">add a simple project file to the GitHub repo</Link>. Then, Ficus automates
 							token handoff.
 						</Body1>
 

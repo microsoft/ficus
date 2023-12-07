@@ -9,7 +9,7 @@ export default function Help() {
 		<Content>
 			<Display as="h1">What is Ficus?</Display>
 			<Title2 as="h2" block>
-				It's an internal tool
+				It’s an internal tool
 			</Title2>
 			<Body1 as="p" block>
 				<Body1Strong>This is an internal tool from Microsoft Design and not supported or warranted in any way.</Body1Strong> No
@@ -34,14 +34,14 @@ export default function Help() {
 				integrate with the same systems for reviews and versioning and so on that engineers are already using.
 			</Body1>
 			<Title2 as="h2" block>
-				What Ficus <em>isn't</em>
+				What Ficus <em>isn’t</em>
 			</Title2>
 			<Body1 as="p" block>
 				Ficus saves tokens in the{" "}
 				<a href="https://tr.designtokens.org/" target="_blank">
 					W3C Design Token Community Group draft format
 				</a>
-				. It doesn't support other token file formats, does not work with other design tools, and does not work with tokens stored
+				. It doesn’t support other token file formats, does not work with other design tools, and does not work with tokens stored
 				outside of GitHub. It does not transform token JSON into code (say, CSS variables).
 			</Body1>
 			<Title2 as="h2" block>

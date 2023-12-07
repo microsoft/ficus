@@ -1,4 +1,10 @@
 pre.tabbed {
+	padding: 1em;
+	overflow-x: auto;
+
+	background-color: var(--colorNeutralBackground1);
+	border-radius: 12px;
+
 	tab-size: 2;
 	user-select: text;
 }
