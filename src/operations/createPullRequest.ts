@@ -10,7 +10,7 @@ import { ValueType } from "@/types/figma"
 import type { CreatePullRequestStatus, CreatePullRequestStep, CreatePullRequestSubstep } from "@/types/operation"
 import type { JsonFigmaFile, JsonManifest } from "@/types/manifest"
 import type { Project } from "@/projects"
-import { getFigmaFileFriendlyName, getFigmaFilePublishedVariables, getFigmaFileVariables } from "@/utils/figma"
+import { getFigmaFileMetadata, getFigmaFilePublishedVariables, getFigmaFileVariables } from "@/utils/figma"
 import { GitHubUploadFile, createBranch, createPullRequest, getFileJSON, parseGitHubBlobUrl, uploadFiles } from "@/utils/github"
 import { figmaColorToTokenJsonColor } from "@/utils/figma"
 import { getFriendlyTokenJSON, replaceAllTokensWithPlaceholders, type JsonToken, type JsonTokenDocument } from "@/utils/tokenjson"
@@ -150,11 +150,12 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 				substeps: [],
 			}
 			figmaStep = this.#addStep(figmaStep)
-			const [friendlyName, figmaVariablesData, figmaPublishedVariablesDataById] = await Promise.all([
-				getFigmaFileFriendlyName(project, fileKey),
+			const [figmaMetadata, figmaVariablesData, figmaPublishedVariablesDataById] = await Promise.all([
+				getFigmaFileMetadata(project, fileKey),
 				getFigmaFileVariables(project, fileKey),
 				getFigmaFilePublishedVariables(project, fileKey),
 			])
+			// TODO: If this metadata thumbnail is different from the one we have stored, update the project.
 
 			// The published variables data is returned keyed by id, but we'll look it up by subscribed_id, so re-index it now.
 			const figmaPublishedVariablesDataBySubscribedId: FigmaFileData["remoteVariables"] = {}
@@ -173,7 +174,11 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 			output.push(thisOutputFile)
 
 			const localVariablesOnly = Object.values(figmaVariablesData.variables).filter(thisVariable => !thisVariable.remote)
-			figmaStep = this.#updateStep(figmaStep, { progress: "done", title: friendlyName, variablesCount: localVariablesOnly.length })
+			figmaStep = this.#updateStep(figmaStep, {
+				progress: "done",
+				title: figmaMetadata.name,
+				variablesCount: localVariablesOnly.length,
+			})
 
 			const localVariableCollectionsOnly = Object.values(figmaVariablesData.variableCollections).filter(
 				thisCollection => !thisCollection.remote

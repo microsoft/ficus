@@ -1,5 +1,4 @@
 import React from "react"
-import { Title3, Body1 } from "@fluentui/react-components"
 import { CreatePullRequestFigmaStep } from "@/types/operation"
 import Step from "./Step"
 

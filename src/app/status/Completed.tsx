@@ -1,5 +1,5 @@
 import React from "react"
-import { Title3, Body1 } from "@fluentui/react-components"
+import { Body1 } from "@fluentui/react-components"
 import { LinkButton } from "@/components/LinkButton"
 import { CreatePullRequestCompletedStep } from "@/types/operation"
 import Step from "./Step"

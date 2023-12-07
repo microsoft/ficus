@@ -1,5 +1,7 @@
 "use client"
 
+import { JsonManifest } from "@/types/manifest"
+import { getFigmaFileMetadata, getFileKeyFromFigmaUrl } from "@/utils/figma"
 import { getFileJSON, parseGitHubBlobUrl } from "@/utils/github"
 
 export function getProjectManager(): ProjectManager {
@@ -23,7 +25,13 @@ export interface Project {
 	}
 	figma: {
 		accessToken: string
+		metadata: { [fileKey: string]: FigmaFileMetadata }
 	}
+}
+
+export interface FigmaFileMetadata {
+	name: string
+	thumbnailUrl?: string
 }
 
 const ProjectsStorageKey = "Projects"
@@ -57,6 +65,7 @@ class ProjectManager {
 								},
 								figma: {
 									accessToken: legacyFigmaAccessToken,
+									metadata: {},
 								},
 							},
 						],
@@ -105,33 +114,43 @@ class ProjectManager {
 		if (!repoInfo) return results
 		results.isProjectLocationValid = true
 
-		// GitHub access token must be valid, and must be sufficient for accessing the project file.
+		// GitHub access token must be sufficient for accessing the project file.
 		if (!project.gitHub || !project.gitHub.accessToken) return results
-		let projectName: string
+		let figmaFileKeys: (string | null)[] = []
 		try {
-			const manifest = await getFileJSON(
+			const manifest: JsonManifest = await getFileJSON(
 				project as Pick<Project, "gitHub">,
 				repoInfo.owner,
 				repoInfo.repo,
 				repoInfo.branch,
 				repoInfo.path
 			)
-			projectName = manifest.name
-			if (!projectName) return results
+			project.name = manifest.name
+			figmaFileKeys = manifest.figma.files.map(file => file.key)
+			if (!project.name) return results
 		} catch (ex) {
 			return results
 		}
 		results.isGitHubAccessValid = true
 
-		// Figma access token must be present.
+		// Figma access token must be sufficient for accessing each of the Figma files.
 		if (!project.figma || !project.figma.accessToken) return results
+		project.figma.metadata = {}
+		try {
+			for (let key of figmaFileKeys) {
+				if (!key) continue
+				key = getFileKeyFromFigmaUrl(key)
+				if (!key) return results
+				const metadata = await getFigmaFileMetadata(project as Pick<Project, "figma">, key)
+				project.figma.metadata[key] = metadata
+			}
+		} catch (ex) {
+			return results
+		}
 		results.isFigmaAccessValid = true
 
 		// Looks good! If everything's valid, return the full Project object.
-		results.project = {
-			...project,
-			name: projectName,
-		} as Project
+		results.project = project as Project
 		return results
 	}
 

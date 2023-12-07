@@ -24,6 +24,7 @@ import { Content, ContentStack } from "@/components/ContentStack"
 import type { Project } from "@/projects"
 import { getProjectManager } from "@/projects"
 import { parseGitHubBlobUrl } from "@/utils/github"
+import ThumbnailStack from "@/components/ThumbnailStack"
 
 const enum Pages {
 	Welcome = 0,
@@ -237,9 +238,24 @@ export default function AddProject() {
 										style={{ width: "100%" }}
 									/>
 								</Field>
+								{figmaError && (
+									<>
+										<Body1 as="p" block>
+											Here are a few things to check:
+										</Body1>
+										<ul>
+											<li>Did you copy the entire access token from Figma?</li>
+											<li>
+												Does that access token grant access to all of the Figma files you need for that project?
+											</li>
+											<li>Were any of the Figma files in that project deleted or moved?</li>
+										</ul>
+									</>
+								)}
 							</>
 						) : currentPage === Pages.Done ? (
 							<>
+								<ThumbnailStack project={finalProject!} />
 								<Title2 as="h3">{finalProject!.name}</Title2>
 								<Body1 as="p" block>
 									Ficus can now open pull requests to sync your variables to code.
@@ -310,10 +326,10 @@ export default function AddProject() {
 						const results = await getProjectManager().test({
 							manifestUrl: newManifestPath,
 							gitHub: { accessToken: newGitHubAccessToken },
-							figma: { accessToken: newFigmaAccessToken },
+							figma: { accessToken: newFigmaAccessToken, metadata: {} },
 						})
 						if (!results.isFigmaAccessValid) {
-							setFigmaError("Include your Figma access token.")
+							setFigmaError("That didn't work.")
 							return
 						}
 						setFigmaError(null)

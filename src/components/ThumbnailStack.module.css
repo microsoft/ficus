@@ -1,0 +1,10 @@
+.root {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+}
+
+.thumbnail {
+	height: 200px;
+	border-radius: 12px;
+}

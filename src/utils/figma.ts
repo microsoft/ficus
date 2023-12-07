@@ -60,16 +60,19 @@ async function call(project: Pick<Project, "figma">, url: string, options?: Requ
 	return data
 }
 
-/** Given a Figma key, returns the file's friendly name. */
-export async function getFigmaFileFriendlyName(project: Project, fileKey: string): Promise<string> {
+/** Given a Figma key, returns the file's friendly name and other metadata. */
+export async function getFigmaFileMetadata(
+	project: Pick<Project, "figma">,
+	fileKey: string
+): Promise<{ name: string; thumbnailUrl?: string }> {
 	const key = getFileKeyFromFigmaUrl(fileKey)
 	if (!key) throw new Error(`Invalid Figma file key: ${fileKey}`)
 	const data = await call(project, `https://api.figma.com/v1/files/${key}?depth=1`)
-	return data.name
+	return { name: data.name, thumbnailUrl: data.thumbnailUrl }
 }
 
 /** Given a Figma key, returns a list of all of the local and imported variable collections in the file. */
-export async function getFigmaFileVariables(project: Project, fileKey: string): Promise<FileVariablesLocalResponseMeta> {
+export async function getFigmaFileVariables(project: Pick<Project, "figma">, fileKey: string): Promise<FileVariablesLocalResponseMeta> {
 	const key = getFileKeyFromFigmaUrl(fileKey)
 	if (!key) throw new Error(`Invalid Figma file key: ${fileKey}`)
 	const data: FileVariablesLocalResponse = await call(project, `https://api.figma.com/v1/files/${key}/variables/local`)
@@ -77,7 +80,10 @@ export async function getFigmaFileVariables(project: Project, fileKey: string): 
 }
 
 /** Given a Figma key, returns a list of all of the published variables in the file. Note that the set of information is slightly different than for the local variables query. */
-export async function getFigmaFilePublishedVariables(project: Project, fileKey: string): Promise<FileVariablesPublishedResponseMeta> {
+export async function getFigmaFilePublishedVariables(
+	project: Pick<Project, "figma">,
+	fileKey: string
+): Promise<FileVariablesPublishedResponseMeta> {
 	const key = getFileKeyFromFigmaUrl(fileKey)
 	if (!key) throw new Error(`Invalid Figma file key: ${fileKey}`)
 	const data: FileVariablesPublishedResponse = await call(project, `https://api.figma.com/v1/files/${key}/variables/published`)
