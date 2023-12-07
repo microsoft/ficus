@@ -2,6 +2,7 @@ export type OperationProgress = "none" | "busy" | "done" | "error"
 
 export interface CreatePullRequestStatus {
 	title: string
+	projectTitle: string
 	progress: OperationProgress
 	steps: CreatePullRequestStep[]
 }

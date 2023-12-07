@@ -8,7 +8,7 @@ export interface ContentProps {
 }
 
 export function ContentStack(props: ContentProps) {
-	return <div className={styles.root}>{props.children}</div>
+	return <div>{props.children}</div>
 }
 
 export function Content(props: ContentProps) {

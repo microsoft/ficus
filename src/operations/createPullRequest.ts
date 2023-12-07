@@ -91,7 +91,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 	async createFigmaPullRequest(project: Project) {
 		// TODO: Exception handling
 
-		this.#status = { title: project.name, progress: "busy", steps: [] }
+		this.#status = { title: "Opening pull request", projectTitle: project.name, progress: "busy", steps: [] }
 		this.#onUpdate()
 
 		const gitHub = parseGitHubBlobUrl(project.manifestUrl)
@@ -119,7 +119,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 
 		try {
 			manifest = await getFileJSON(project, gitHub.owner, gitHub.repo, gitHub.branch, gitHub.path)
-			this.#status.title = manifest.name
+			this.#status.projectTitle = manifest.name
 			// TODO: If this name is different from the one we have stored, update the project.
 			gitHubStep = this.#updateStep(gitHubStep, { progress: "done" })
 		} catch (ex) {
@@ -319,6 +319,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 			prBody
 		)
 		this.#status.progress = "done"
+		this.#status.title = "Pull request opened"
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		pullRequestStep = this.#updateStep(pullRequestStep, {
 			progress: "done",
@@ -330,6 +331,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 
 const initialStatus: CreatePullRequestStatus = {
 	title: "",
+	projectTitle: "",
 	progress: "none",
 	steps: [],
 }

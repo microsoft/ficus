@@ -50,7 +50,7 @@ class ProjectManager {
 					data = {
 						projects: [
 							{
-								name: repoInfo ? `${repoInfo.owner}/${repoInfo.repo} (${repoInfo.branch})` : "My project",
+								name: repoInfo ? `${repoInfo.owner}/\u200b${repoInfo.repo} (${repoInfo.branch})` : "My project",
 								manifestUrl: legacyManifestPath,
 								gitHub: {
 									accessToken: legacyGitHubAccessToken,

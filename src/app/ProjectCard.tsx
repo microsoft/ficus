@@ -24,7 +24,7 @@ export function ProjectCard(props: ProjectCardProps) {
 			<Title2 as="h2" style={{ margin: 0 }}>
 				{props.project.name}
 			</Title2>
-			<Body1>{gitHub ? `${gitHub.owner}/${gitHub.repo} (${gitHub.branch})` : props.project.manifestUrl}</Body1>
+			<Body1>{gitHub ? `${gitHub.owner}/\u200b${gitHub.repo} (${gitHub.branch})` : props.project.manifestUrl}</Body1>
 			<div className={styles.horizontal}>
 				<Button appearance="outline" onClick={() => props.forgetProject(props.project)} disabled={isBusy}>
 					Forget this project

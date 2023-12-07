@@ -1,10 +1,14 @@
-.status {
-	padding: 0;
-	display: flex;
-	flex-direction: column;
-	gap: 1em;
+.card {
+	margin: 2em 0;
 }
 
-.legacystatus li {
-	margin: 0.5em 0;
+.cardcontent {
+	padding: 0 1em;
+	display: flex;
+	flex-direction: column;
+}
+
+.right {
+	display: flex;
+	justify-content: flex-end;
 }
