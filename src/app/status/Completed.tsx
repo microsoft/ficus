@@ -15,7 +15,7 @@ export function Completed(props: CreatePullRequestCompletedStep & { isLast: bool
 			{props.number && <li>Opened and ready for review</li>}
 			{props.url && (
 				<Body1 as="p" block>
-					<LinkButton href={props.url} target="_blank" appearance="primary" size="large">
+					<LinkButton href={props.url} target="_blank" appearance="primary">
 						View pull request
 					</LinkButton>
 				</Body1>

@@ -22,7 +22,7 @@
 .timeline {
 	flex: 1;
 	width: 4px;
-	margin: 0 auto;
+	margin: 2px auto 0 auto;
 	background-color: var(--colorNeutralStroke1);
 }
 

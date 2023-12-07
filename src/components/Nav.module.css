@@ -20,13 +20,14 @@ header.root {
 	}
 }
 
-header.root a {
+header.root a,
+header.root a:visited {
 	color: unset;
 	text-decoration: none;
 }
 
-header.root a:hover,
-header.root a:focus-visible {
+header.root a:hover:not(.linkbutton),
+header.root a:focus-visible:not(.linkbutton) {
 	text-decoration: underline;
 }
 

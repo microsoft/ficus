@@ -13,6 +13,9 @@ import {
 	Card,
 	Button,
 	Input,
+	Combobox,
+	Option,
+	OptionGroup,
 	Field,
 	InfoLabel,
 	Accordion,
@@ -42,8 +45,10 @@ export default function AddProject() {
 	const [newManifestPath, setNewManifestPath] = React.useState("")
 	const [manifestPathError, setManifestPathError] = React.useState<string | null>(null)
 	const [newGitHubAccessToken, setNewGitHubAccessToken] = React.useState("")
+	const [isGitHubDropdownOpen, setIsGitHubDropdownOpen] = React.useState(false)
 	const [gitHubError, setGitHubError] = React.useState<string | null>(null)
 	const [newFigmaAccessToken, setNewFigmaAccessToken] = React.useState("")
+	const [isFigmaDropdownOpen, setIsFigmaDropdownOpen] = React.useState(false)
 	const [figmaError, setFigmaError] = React.useState<string | null>(null)
 	const [finalProject, setFinalProject] = React.useState<Project | null>(null)
 
@@ -58,7 +63,7 @@ export default function AddProject() {
 		repoOwner = parsed ? parsed.owner : null
 		repoName = parsed ? parsed.repo : null
 	} catch (ex) {
-		/* handled below */
+		/* keep repoOwner and repoName null */
 	}
 
 	return (
@@ -115,7 +120,6 @@ export default function AddProject() {
 										type="text"
 										required
 										value={newManifestPath}
-										disabled={false}
 										onChange={ev => setNewManifestPath(ev.target.value)}
 										style={{ width: "100%" }}
 									/>
@@ -145,29 +149,29 @@ export default function AddProject() {
 										GitHub Developer Settings page
 									</a>
 									.
-									<ul>
-										<li>Create a fine-grained PAT.</li>
-										<li>
-											Set Resource Owner to{" "}
-											{repoOwner ? (
-												<Body1Strong>{repoOwner}</Body1Strong>
-											) : (
-												"the account that owns the repo containing your tokens"
-											)}
-											.
-										</li>
-										<li>
-											Set Repository Access to{" "}
-											{repoName ? (
-												<>
-													<Body1Strong>{repoName}</Body1Strong> or{" "}
-												</>
-											) : null}
-											All Repositories.
-										</li>
-										<li>Enable permissions for Contents, Metadata, and Pull Requests.</li>
-									</ul>
-								</Body1>
+								</Body1>{" "}
+								<ul>
+									<li>Create a fine-grained PAT.</li>
+									<li>
+										Set Resource Owner to{" "}
+										{repoOwner ? (
+											<Body1Strong>{repoOwner}</Body1Strong>
+										) : (
+											"the account that owns the repo containing your tokens"
+										)}
+										.
+									</li>
+									<li>
+										Set Repository Access to{" "}
+										{repoName ? (
+											<>
+												<Body1Strong>{repoName}</Body1Strong> or{" "}
+											</>
+										) : null}
+										All Repositories.
+									</li>
+									<li>Enable permissions for Contents, Metadata, and Pull Requests.</li>
+								</ul>
 								<Field
 									label={
 										<InfoLabel
@@ -181,14 +185,41 @@ export default function AddProject() {
 									validationState={gitHubError ? "error" : "none"}
 									validationMessage={gitHubError}
 								>
-									<Input
-										type="password"
-										required
-										value={newGitHubAccessToken}
-										disabled={false}
-										onChange={ev => setNewGitHubAccessToken(ev.target.value)}
-										style={{ width: "100%" }}
-									/>
+									{isFirstProject ? (
+										<Input
+											type="password"
+											required
+											value={newGitHubAccessToken}
+											onChange={ev => setNewGitHubAccessToken(ev.target.value)}
+											style={{ width: "100%" }}
+										/>
+									) : (
+										<Combobox
+											type="password"
+											required
+											value={newGitHubAccessToken}
+											inlinePopup
+											open={isGitHubDropdownOpen}
+											onChange={ev => {
+												setNewGitHubAccessToken(ev.target.value)
+												setIsGitHubDropdownOpen(false)
+											}}
+											onOptionSelect={(ev, data) => setNewGitHubAccessToken(data.optionValue!)}
+											onOpenChange={(ev, data) => setIsGitHubDropdownOpen(data.open)}
+											selectedOptions={[]}
+											style={{ width: "100%" }}
+										>
+											<OptionGroup label="Paste a new access token, or reuse the one from from">
+												{getProjectManager()
+													.getAll()
+													.map((project, index) => (
+														<Option key={index} value={project.gitHub.accessToken}>
+															{project.name}
+														</Option>
+													))}
+											</OptionGroup>
+										</Combobox>
+									)}
 								</Field>
 								{gitHubError && (
 									<>
@@ -229,14 +260,41 @@ export default function AddProject() {
 									validationState={figmaError ? "error" : "none"}
 									validationMessage={figmaError}
 								>
-									<Input
-										type="password"
-										required
-										value={newFigmaAccessToken}
-										disabled={false}
-										onChange={ev => setNewFigmaAccessToken(ev.target.value)}
-										style={{ width: "100%" }}
-									/>
+									{isFirstProject ? (
+										<Input
+											type="password"
+											required
+											value={newFigmaAccessToken}
+											onChange={ev => setNewFigmaAccessToken(ev.target.value)}
+											style={{ width: "100%" }}
+										/>
+									) : (
+										<Combobox
+											type="password"
+											required
+											value={newFigmaAccessToken}
+											inlinePopup
+											open={isFigmaDropdownOpen}
+											onChange={ev => {
+												setNewFigmaAccessToken(ev.target.value)
+												setIsFigmaDropdownOpen(false)
+											}}
+											onOptionSelect={(ev, data) => setNewFigmaAccessToken(data.optionValue!)}
+											onOpenChange={(ev, data) => setIsFigmaDropdownOpen(data.open)}
+											selectedOptions={[]}
+											style={{ width: "100%" }}
+										>
+											<OptionGroup label="Paste a new access token, or reuse the one from from">
+												{getProjectManager()
+													.getAll()
+													.map((project, index) => (
+														<Option key={index} value={project.figma.accessToken}>
+															{project.name}
+														</Option>
+													))}
+											</OptionGroup>
+										</Combobox>
+									)}
 								</Field>
 								{figmaError && (
 									<>
