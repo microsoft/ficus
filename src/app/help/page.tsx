@@ -41,8 +41,8 @@ export default function Help() {
 				<a href="https://tr.designtokens.org/" target="_blank">
 					W3C Design Token Community Group draft format
 				</a>
-				. It doesn’t support other token file formats, does not work with other design tools, and does not work with tokens stored
-				outside of GitHub. It does not transform token JSON into code (say, CSS variables).
+				. It doesn’t support other token file formats, does not work with design tools other than Figma, and does not work with
+				tokens stored outside of GitHub. It does not transform token JSON into code (say, CSS variables).
 			</Body1>
 			<Title2 as="h2" block>
 				How do I set it up?

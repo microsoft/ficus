@@ -11,6 +11,7 @@ import ThumbnailStack from "@/components/ThumbnailStack"
 export interface ProjectCardProps {
 	project: Project
 	isBusy: boolean
+	showForgetButton?: boolean
 	createFigmaPullRequest: (project: Project) => void
 	forgetProject: (project: Project) => void
 }
@@ -32,10 +33,14 @@ export function ProjectCard(props: ProjectCardProps) {
 					<Button appearance="primary" onClick={() => props.createFigmaPullRequest(props.project)} disabled={isBusy}>
 						Create a pull request
 					</Button>
-					<div className={styles.spacer} />
-					<Button appearance="outline" onClick={() => props.forgetProject(props.project)} disabled={isBusy}>
-						Forget this project
-					</Button>
+					{props.showForgetButton !== false && (
+						<>
+							<div className={styles.spacer} />
+							<Button appearance="outline" onClick={() => props.forgetProject(props.project)} disabled={isBusy}>
+								Forget this project
+							</Button>
+						</>
+					)}
 				</div>
 			</div>
 		</Card>

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import {
 	Display,
 	Title1,
-	Title2,
+	LargeTitle,
 	Body1,
 	Body1Strong,
 	Card,
@@ -314,7 +314,7 @@ export default function AddProject() {
 						) : currentPage === Pages.Done ? (
 							<>
 								<ThumbnailStack project={finalProject!} />
-								<Title2 as="h3">{finalProject!.name}</Title2>
+								<LargeTitle as="h2">{finalProject!.name}</LargeTitle>
 								<Body1 as="p" block>
 									Ficus can now open pull requests to sync your variables to code.
 								</Body1>
