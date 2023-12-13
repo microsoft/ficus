@@ -32,6 +32,7 @@ export interface CreatePullRequestCompletedStep extends CreatePullRequestStepBas
 	branch: string
 	number: number | null
 	url: string | null
+	draft: boolean
 }
 
 export interface CreatePullRequestFailedStep extends CreatePullRequestStepBase {

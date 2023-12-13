@@ -16,7 +16,7 @@ import { figmaColorToTokenJsonColor } from "@/utils/figma"
 import { getFriendlyTokenJSON, replaceAllTokensWithPlaceholders, type JsonToken, type JsonTokenDocument } from "@/utils/tokenjson"
 
 interface CreatePullRequestMethods {
-	createFigmaPullRequest(project: Project): Promise<void>
+	createFigmaPullRequest(project: Project, options?: { draft?: boolean }): Promise<void>
 }
 
 let instance: CreatePullRequestOperation | undefined
@@ -88,7 +88,7 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 		return this.#replaceStep(step, { ...step, substeps: [...step.substeps, substep] })
 	}
 
-	async createFigmaPullRequest(project: Project) {
+	async createFigmaPullRequest(project: Project, options?: { draft?: boolean }) {
 		// TODO: Exception handling
 
 		this.#status = { title: "Opening pull request", projectTitle: project.name, progress: "busy", steps: [] }
@@ -288,49 +288,60 @@ class CreatePullRequestOperation implements CreatePullRequestMethods {
 			branch: gitHub.branch,
 			number: null,
 			url: null,
+			draft: !!options && !!options.draft,
 			progress: "busy",
 			substeps: [],
 		}
 		pullRequestStep = this.#addStep(pullRequestStep)
 
-		const filesToUpload: GitHubUploadFile[] = []
-		for (const figmaFile of output) {
-			for (const collectionName in figmaFile.collections) {
-				const collection = figmaFile.collections[collectionName]
-				for (const modeName in collection.modes) {
-					const outputFiles = collection.modes[modeName]
-					for (const outputFile of outputFiles) {
-						filesToUpload.push({
-							path: `${gitHub.path}/${outputFile.filename}`,
-							contents: getFriendlyTokenJSON(outputFile.tokens, /* sort: */ !outputFile.exists),
-						})
+		try {
+			const filesToUpload: GitHubUploadFile[] = []
+			for (const figmaFile of output) {
+				for (const collectionName in figmaFile.collections) {
+					const collection = figmaFile.collections[collectionName]
+					for (const modeName in collection.modes) {
+						const outputFiles = collection.modes[modeName]
+						for (const outputFile of outputFiles) {
+							filesToUpload.push({
+								path: `${gitHub.path}/${outputFile.filename}`,
+								contents: getFriendlyTokenJSON(outputFile.tokens, /* sort: */ !outputFile.exists),
+							})
+						}
 					}
 				}
 			}
+			const branchName = `figma-${Math.floor(Math.random() * 0xffffffff).toString(16)}`
+			const commitMessage = "Changes from Figma"
+			const prTitle = `Changes from Figma ${new Date().toDateString()}`
+			const prBody = ""
+			const createBranchSha = await createBranch(project, gitHub.owner, gitHub.repo, gitHub.branch, branchName)
+			await uploadFiles(project, gitHub.owner, gitHub.repo, branchName, filesToUpload, createBranchSha, commitMessage)
+			const [newPullRequestUrl, newPullRequestNumber] = await createPullRequest(
+				project,
+				gitHub.owner,
+				gitHub.repo,
+				branchName,
+				gitHub.branch,
+				prTitle,
+				prBody,
+				{ draft: options && !!options.draft }
+			)
+			this.#status.progress = "done"
+			this.#status.title = "Pull request opened"
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			pullRequestStep = this.#updateStep(pullRequestStep, {
+				progress: "done",
+				number: newPullRequestNumber,
+				url: newPullRequestUrl,
+			})
+		} catch (ex) {
+			pullRequestStep = this.#addSubstep(pullRequestStep, { type: "error", message: `Failed to open a pull request. "${ex}"` })
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			pullRequestStep = this.#updateStep(pullRequestStep, {
+				progress: "error",
+			})
+			this.#addStep({ type: "failed", progress: "error", substeps: [] })
 		}
-		const branchName = `figma-${Math.floor(Math.random() * 0xffffffff).toString(16)}`
-		const commitMessage = "Changes from Figma"
-		const prTitle = `Changes from Figma ${new Date().toDateString()}`
-		const prBody = ""
-		const createBranchSha = await createBranch(project, gitHub.owner, gitHub.repo, gitHub.branch, branchName)
-		await uploadFiles(project, gitHub.owner, gitHub.repo, branchName, filesToUpload, createBranchSha, commitMessage)
-		const [newPullRequestUrl, newPullRequestNumber] = await createPullRequest(
-			project,
-			gitHub.owner,
-			gitHub.repo,
-			branchName,
-			gitHub.branch,
-			prTitle,
-			prBody
-		)
-		this.#status.progress = "done"
-		this.#status.title = "Pull request opened"
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		pullRequestStep = this.#updateStep(pullRequestStep, {
-			progress: "done",
-			number: newPullRequestNumber,
-			url: newPullRequestUrl,
-		})
 	}
 }
 

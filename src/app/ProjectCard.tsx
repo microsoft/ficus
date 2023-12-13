@@ -2,7 +2,18 @@
 
 import React from "react"
 import styles from "./ProjectCard.module.css"
-import { Button, Card, LargeTitle, Body1 } from "@fluentui/react-components"
+import {
+	Button,
+	SplitButton,
+	Menu,
+	MenuItem,
+	MenuList,
+	MenuPopover,
+	MenuTrigger,
+	Card,
+	LargeTitle,
+	Body1,
+} from "@fluentui/react-components"
 import { useCreatePullRequest } from "@/operations/createPullRequest"
 import type { Project } from "@/projects"
 import { parseGitHubBlobUrl } from "@/utils/github"
@@ -12,7 +23,7 @@ export interface ProjectCardProps {
 	project: Project
 	isBusy: boolean
 	showForgetButton?: boolean
-	createFigmaPullRequest: (project: Project) => void
+	createFigmaPullRequest: (project: Project, options?: { draft?: boolean }) => void
 	forgetProject: (project: Project) => void
 }
 
@@ -30,9 +41,31 @@ export function ProjectCard(props: ProjectCardProps) {
 				</LargeTitle>
 				<Body1>{gitHub ? `${gitHub.owner}/\u200b${gitHub.repo} (${gitHub.branch})` : props.project.manifestUrl}</Body1>
 				<div className={styles.horizontal}>
-					<Button appearance="primary" onClick={() => props.createFigmaPullRequest(props.project)} disabled={isBusy}>
-						Create a pull request
-					</Button>
+					<Menu positioning="below-end">
+						<MenuTrigger disableButtonEnhancement>
+							{triggerProps => (
+								<SplitButton
+									appearance="primary"
+									menuButton={triggerProps}
+									primaryActionButton={{
+										onClick() {
+											props.createFigmaPullRequest(props.project)
+										},
+									}}
+									disabled={isBusy}
+								>
+									Create a pull request
+								</SplitButton>
+							)}
+						</MenuTrigger>
+
+						<MenuPopover>
+							<MenuList>
+								<MenuItem onClick={() => props.createFigmaPullRequest(props.project)}>Ready for review</MenuItem>
+								<MenuItem onClick={() => props.createFigmaPullRequest(props.project, { draft: true })}>Draft</MenuItem>
+							</MenuList>
+						</MenuPopover>
+					</Menu>
 					{props.showForgetButton !== false && (
 						<>
 							<div className={styles.spacer} />

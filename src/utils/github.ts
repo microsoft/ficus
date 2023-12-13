@@ -169,7 +169,8 @@ export async function createPullRequest(
 	branchFrom: string,
 	branchTo: string,
 	title: string,
-	body: string
+	body: string,
+	options?: { draft?: boolean }
 ): Promise<[string, number]> {
 	// https://docs.github.com/en/rest/pulls/pulls#create-a-pull-request
 	const pullRequest = await call(project, `https://api.github.com/repos/${owner}/${repo}/pulls`, {
@@ -179,6 +180,7 @@ export async function createPullRequest(
 			body: body,
 			head: branchFrom,
 			base: branchTo,
+			draft: options && !!options.draft,
 		}),
 	})
 

@@ -6,9 +6,7 @@ import Step from "./Step"
 export function Failed(props: CreatePullRequestFailedStep & { isLast: boolean }) {
 	return (
 		<Step progress={props.progress} substeps={props.substeps} isLast={props.isLast}>
-			<Title3 as="h2" block>
-				Oops
-			</Title3>
+			<Title3 as="h2">Oops</Title3>
 			<Body1 as="p" block>
 				Something went wrong.
 			</Body1>

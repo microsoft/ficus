@@ -87,10 +87,10 @@ export default function Home() {
 		</ContentStack>
 	)
 
-	async function createFigmaPullRequest(project: Project) {
+	async function createFigmaPullRequest(project: Project, options?: { draft?: boolean }) {
 		if (isBusy || !project) return
 		router.push("/status")
-		createPullRequestOperations.createFigmaPullRequest(project)
+		createPullRequestOperations.createFigmaPullRequest(project, { draft: !!options && !!options.draft })
 	}
 
 	async function forgetProject(project: Project) {
