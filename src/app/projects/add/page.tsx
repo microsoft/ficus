@@ -229,8 +229,11 @@ export default function AddProject() {
 										<ul>
 											<li>Did you copy the entire access token from GitHub?</li>
 											<li>
-												Does that access token grant access to the project file? (You may need a different GitHub
-												access token for each repo.)
+												Does that access token grant access to{" "}
+												<a href={newManifestPath} target="_blank">
+													the project file
+												</a>
+												? (You may need a different GitHub access token for each repo.)
 											</li>
 											<li>Did you enter the project path correctly on the previous page?</li>
 										</ul>
