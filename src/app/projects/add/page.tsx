@@ -149,7 +149,7 @@ export default function AddProject() {
 										GitHub Developer Settings page
 									</a>
 									.
-								</Body1>{" "}
+								</Body1>
 								<ul>
 									<li>Create a fine-grained PAT.</li>
 									<li>
@@ -170,7 +170,7 @@ export default function AddProject() {
 										) : null}
 										All Repositories.
 									</li>
-									<li>Enable permissions for Contents, Metadata, and Pull Requests.</li>
+									<li>Enable permissions for Contents and Pull Requests. (Metadata will be added for you.)</li>
 								</ul>
 								<Field
 									label={
@@ -250,6 +250,17 @@ export default function AddProject() {
 									</a>
 									, scroll down to Personal access tokens and click Generate new token.
 								</Body1>
+								<ul>
+									<li>Set Expiration to No expiration (recommended).</li>
+									<li>
+										Under Scopes, set File Content and Variables to Read-only.
+										<ul>
+											<li>
+												If you don't see the Variables scope, are you signed in with a Figma Enterprise account?
+											</li>
+										</ul>
+									</li>
+								</ul>
 								<Field
 									label={
 										<InfoLabel
