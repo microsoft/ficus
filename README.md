@@ -42,4 +42,4 @@ Any use of third-party trademarks or logos are subject to those third-party's po
 
 ---
 
-© 2023 Microsoft.
+© 2023-2024 Microsoft.

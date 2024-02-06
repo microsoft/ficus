@@ -59,7 +59,7 @@ export default function Help() {
 				Legal info
 			</Title2>
 			<Body1 as="p" block>
-				Ficus is © 2023 Microsoft and developed by{" "}
+				Ficus is © 2023-2024 Microsoft and developed by{" "}
 				<a href="https://microsoft.design/" target="_blank">
 					Microsoft Design
 				</a>
