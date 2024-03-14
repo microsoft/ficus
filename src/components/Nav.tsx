@@ -18,7 +18,7 @@ export function Nav(_props: NavProps) {
 								<Body1Stronger>Ficus</Body1Stronger>
 							</Link>
 						</li>
-						<div className={styles.spacer}></div>
+						<li className={styles.spacer} aria-hidden="true"></li>
 						<li className={styles.right}>
 							<Link href="/help">
 								<Body1>FAQ</Body1>

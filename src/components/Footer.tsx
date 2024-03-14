@@ -17,7 +17,7 @@ export function Footer(_props: FooterProps) {
 							Microsoft Design
 						</a>
 					</li>
-					<div className={styles.spacer}></div>
+					<li className={styles.spacer} aria-hidden="true"></li>
 					<li>
 						<a href="https://go.microsoft.com/fwlink/?LinkID=206977" target="_blank">
 							Terms of use
